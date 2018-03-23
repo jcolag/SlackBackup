@@ -14,5 +14,8 @@
     "postinstall": "npm run electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "http": "0.0.0",
+    "slack": "^11.0.0"
+  }
 }
