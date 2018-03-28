@@ -1,6 +1,6 @@
 import Reflux from 'reflux';
 import Slack from 'slack';
-import { ConfigStore } from './configstore';
+import { ConfigActions, ConfigStore } from './configstore';
 
 const fs = require('fs');
 const path = require('path');
@@ -20,11 +20,13 @@ export class SlackStore extends Reflux.Store {
       channels: [],
       groups: [],
       ims: [],
+      team: {},
       userMap: {},
       users: [],
       waitingForChannels: false,
       waitingForGroups: false,
       waitingForIms: false,
+      waitingForTeam: false,
       waitingForUserMap: false,
       waitingForUsers: false,
     };
@@ -37,9 +39,14 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    let token = ConfigStore.state.tokens[ConfigStore.state.whichToken];
+    if (typeof token !== 'string') {
+      token = token.value;
+    }
     this.slack = new Slack({
-      token: ConfigStore.state.tokens[ConfigStore.state.whichToken],
+      token,
     });
+    this.getTeam();
     this.getUsers();
     this.getChannels();
     this.getGroups();
@@ -71,6 +78,34 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       listsFailed: null,
       listsLoading: null,
+    });
+  }
+
+  getTeam() {
+    this.setState({ waitingForTeam: true });
+    this.slack.team.info()
+      .then(this.setTeam.bind(this))
+      .catch((error) => console.log(error));
+  }
+
+  setTeam(data) {
+    if (!data.ok) {
+      console.log('Error retrieving Team information.');
+      return;
+    }
+
+    const { team } = data;
+    let token = ConfigStore.state.tokens[ConfigStore.state.whichToken];
+    this.setState({
+      team,
+      waitingForTeam: false,
+    });
+    if (typeof token !== 'string') {
+      token = token.value;
+    }
+    ConfigActions.setToken({
+      name: team.name,
+      value: token,
     });
   }
 
