@@ -31,6 +31,7 @@ export class SlackStore extends Reflux.Store {
       waitingForUsers: false,
     };
     this.listenables = SlackActions;
+    this.teamName = 'unknown_team';
   }
 
   onGetLists() {
@@ -107,6 +108,7 @@ export class SlackStore extends Reflux.Store {
       name: team.name,
       value: token,
     });
+    this.teamName = team.name.toLowerCase().replace(/[^0-9a-z]/, '_');
   }
 
   /**
@@ -153,7 +155,7 @@ export class SlackStore extends Reflux.Store {
     this.state.channels.filter((c) => c.is_member || ConfigStore.state.nonmemberSave)
       .forEach((channel) => {
         const channelFile = path
-          .join(ConfigStore.state.folder, `channel-${channel.name}.json`);
+          .join(ConfigStore.state.folder, this.teamName, `channel-${channel.name}.json`);
         const res = SlackStore.retrieveExistingMessages(channelFile);
         this.slack.channels.history({
           channel: channel.id,
@@ -207,11 +209,6 @@ export class SlackStore extends Reflux.Store {
      * @returns {null} No return
      */
   processIms() {
-    if (this.state) {
-      console.log(this.state.waitingForIms);
-    } else {
-      console.log('No state');
-    }
     if (!this.state || this.state.waitingForIms) {
       setTimeout(this.processIms.bind(this), timeout);
       return;
@@ -220,7 +217,7 @@ export class SlackStore extends Reflux.Store {
     this.state.ims.forEach((im) => {
       const user = this.state.userMap[im.user];
       const name = user.real_name ? user.real_name : user.name;
-      const imFile = path.join(ConfigStore.state.folder, `im-${name}.json`)
+      const imFile = path.join(ConfigStore.state.folder, this.teamName, `im-${name}.json`)
         .replace(' ', '-');
       const res = SlackStore.retrieveExistingMessages(imFile);
       this.slack.im.history({
@@ -276,7 +273,7 @@ export class SlackStore extends Reflux.Store {
 
     this.state.groups.forEach((group) => {
       const groupFile = path
-        .join(ConfigStore.state.folder, `group-${group.name}.json`);
+        .join(ConfigStore.state.folder, this.teamName, `group-${group.name}.json`);
       const res = SlackStore.retrieveExistingMessages(groupFile);
       this.slack.groups.history({
         channel: group.id,
@@ -332,7 +329,7 @@ export class SlackStore extends Reflux.Store {
       name = name.replace(' ', '-');
       this.state.userMap[user.id] = user;
       fs.writeFileSync(path
-        .join(ConfigStore.state.folder, `user-${name}.json`), json);
+        .join(ConfigStore.state.folder, this.teamName, `user-${name}.json`), json);
     });
     this.setState({ waitingForUserMap: false });
   }
