@@ -94,10 +94,11 @@ export default class Configuration extends Reflux.Component<Props> {
         <h1>Configuration</h1>
         <div className="row col-md-12">
           <div className="col-md-3">
-            <label htmlFor="tokens">Token</label>
+            <label htmlFor="tokens" className="form-control">Token</label>
           </div>
           <div className="col-md-7">
             <select
+              className="custom-select"
               id="tokens"
               style={{ width: '100%' }}
               onChange={Configuration.updateToken}
@@ -107,6 +108,7 @@ export default class Configuration extends Reflux.Component<Props> {
           </div>
           <div className="col-md-2">
             <button
+              className="btn btn-secondary"
               disabled={this.state.addingToken}
               onClick={this.startAddToken.bind(this)}
               style={{ width: '100%' }}
@@ -115,26 +117,23 @@ export default class Configuration extends Reflux.Component<Props> {
             </button>
           </div>
         </div>
-        <div className="row col-md-12">
-          You can find or generate your Legacy Token API key for your Slack teams&nbsp;
-          <a
-            style={{ fontSize: '1em' }}
-            onClick={Configuration.openSlackLegacyTokenGenerator}
-          >
-            at Slack&rsquo;s legacy token generator
-          </a>. You may need to log in as multiple users.
-        </div>
         <div
           className="row col-md-12"
           style={this.state.addingToken ? null : { display: 'none' }}
         >
-          <div className="col-md-1" />
-          <div className="col-md-9" >
-            <input
-              ref={(i) => { this.tokenField = i; }}
-              style={{ width: '100%' }}
-              type="text"
-            />
+          <div className="row col-md-12" style={{ margin: '0.5em 0 0.5em 0' }}>
+            <div className="col-md-1" />
+            <div className="col-md-10 form-control alert-primary">
+              You can find or generate your Legacy Token API key for your Slack teams&nbsp;
+              <a
+                className="alert-link"
+                style={{ fontSize: '1em' }}
+                onClick={Configuration.openSlackLegacyTokenGenerator}
+              >
+                at Slack&rsquo;s legacy token generator
+              </a>. You may need to log in as multiple users.
+            </div>
+            <div className="col-md-1" />
           </div>
           <div className="col-md-2">
             <button
@@ -147,10 +146,11 @@ export default class Configuration extends Reflux.Component<Props> {
         </div>
         <div className="row col-md-12">
           <div className="col-md-3">
-            <label htmlFor="folder">Save Folder</label>
+            <label htmlFor="folder" className="form-control">Save Folder</label>
           </div>
           <div className="col-md-9">
             <input
+              className="form-control"
               id="folder"
               type="text"
               value={this.state.folder}
@@ -159,44 +159,62 @@ export default class Configuration extends Reflux.Component<Props> {
             />
           </div>
         </div>
-        <div className="row col-md-12" style={this.state.folderMissing ? null : { display: 'none' }}>
-          <div className="col-md-8">
+        <div className="row col-md-12" style={this.state.folderMissing ? { marginBottom: '1em' } : { display: 'none' }}>
+          <div className="col-md-1" />
+          <div className="col-md-6 form-control alert-warning">
             The folder doesn&rsquo;t appear to exist.
           </div>
           <div className="col-md-4">
             <button
+              className="btn btn-info"
               onClick={Configuration.createFolder}
               style={{ width: '100%' }}
             >
-              Create It
+              <div className="row col-md-12">
+                <div className="col-md-3" style={{ padding: 0 }}>
+                </div>
+                <div className="col-md-9">
+                  Create It
+                </div>
+              </div>
             </button>
           </div>
+          <div className="col-md-1" />
         </div>
         <div className="row col-md-12">
           <div className="col-md-6">
-            <label htmlFor="saveempty">Save Empty Conversations&nbsp;
+            <div className="custom-control custom-checkbox form-control">
               <input
+                className="custom-control-input"
                 id="saveempty"
                 type="checkbox"
                 checked={this.state.emptySave}
                 onChange={Configuration.updateEmptySave}
               />
-            </label>
+              <label htmlFor="saveempty" className="custom-control-label">
+                Save Empty Conversations
+              </label>
+            </div>
           </div>
           <div className="col-md-6">
-            <label htmlFor="savenonmember">Save Unsubscribed Channels&nbsp;
+            <div className="custom-control custom-checkbox form-control">
               <input
+                className="custom-control-input"
                 id="savenonmember"
                 type="checkbox"
                 checked={this.state.nonmemberSave}
                 onChange={Configuration.updateNonmemberSave}
               />
-            </label>
+              <label htmlFor="savenonmember" className="custom-control-label">
+                Save Unsubscribed Channels
+              </label>
+            </div>
           </div>
         </div>
         <div className="row col-md-12">
           <div className="col-md-6">
             <button
+              className="btn btn-primary"
               onClick={Configuration.getLists}
               style={{ width: '100%' }}
               disabled={this.state.whichToken < 0 || this.state.folderMissing}
@@ -206,6 +224,7 @@ export default class Configuration extends Reflux.Component<Props> {
           </div>
           <div className="col-md-6">
             <button
+              className="btn btn-primary"
               onClick={Configuration.saveConfig}
               style={{ width: '100%' }}
               disabled={!this.state.isDirty}

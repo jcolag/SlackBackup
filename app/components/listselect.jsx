@@ -30,24 +30,26 @@ export default class ListSelect extends Reflux.Component<Props> {
     const items = [];
     list.forEach(item => {
       items.push(
-        <div className="row col-md-12" key={`div${item.id}`} style={{ lineHeight: '1em' }} >
-          <div className="col-md-1">
-            <input
-              id={item.id}
-              key={item.id}
-              type="checkbox"
-              checked={!Object.prototype.hasOwnProperty.call(item, 'is_member') || item.is_member}
-              onChange={ListSelect.updateCheck}
-            />
-          </div>
-          <div className="col-md-10">
-            <label
-              key={`label${item.id}`}
-              htmlFor={item.id}
-            >
-              {item.name}
-            </label>
-          </div>
+        <div
+          className="row col-md-12 custom-control custom-checkbox"
+          key={`div${item.id}`}
+          style={{ lineHeight: '1em', left: '0.25em' }}
+        >
+          <input
+            checked={item.shouldDownload}
+            className="custom-control-input"
+            id={item.id}
+            key={item.id}
+            onChange={ListSelect.updateCheck}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label form-control alert-primary"
+            htmlFor={item.id}
+            key={`label${item.id}`}
+          >
+            {item.profile && item.profile.real_name ? item.profile.real_name : item.name}
+          </label>
         </div>);
     });
     return items;
@@ -70,9 +72,25 @@ export default class ListSelect extends Reflux.Component<Props> {
             {users}
           </div>
         </div>
-        <div className="col-md-3">
-          <button onClick={ListSelect.startDownload} style={{ height: '48%', marginTop: '4%', width: '100%' }} >Download</button>
-          <button onClick={ListSelect.abortDownload} style={{ height: '48%', marginTop: '8%', width: '100%' }} >Reset</button>
+        <div className="col-md-4">
+          <button
+            onClick={ListSelect.startDownload}
+            className="btn btn-primary"
+            style={{ height: '26%', marginTop: '4%', width: '100%' }}
+          >
+            <div className="row col-md-12">
+                Download
+            </div>
+          </button>
+          <button
+            onClick={ListSelect.abortDownload}
+            className="btn btn-warning"
+            style={{ height: '26%', marginTop: '7%', width: '100%' }}
+          >
+            <div className="row col-md-12">
+                Delete Files
+            </div>
+          </button>
         </div>
       </div>
     );
