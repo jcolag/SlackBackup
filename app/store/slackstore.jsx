@@ -102,6 +102,9 @@ export class SlackStore extends Reflux.Store {
       waitingForTeam: false,
     });
     if (typeof token !== 'string') {
+      if (token.name === team.name) {
+        return;
+      }
       token = token.value;
     }
     ConfigActions.setToken({

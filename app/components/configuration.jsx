@@ -102,6 +102,7 @@ export default class Configuration extends Reflux.Component<Props> {
               id="tokens"
               style={{ width: '100%' }}
               onChange={Configuration.updateToken}
+              value={this.state.whichToken}
             >
               {tokenOptions}
             </select>

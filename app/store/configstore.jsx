@@ -84,7 +84,6 @@ export class ConfigStore extends Reflux.Store {
     }
 
     this.setState({
-      isDirty: true,
       whichToken: newIndex,
     });
   }
