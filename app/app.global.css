@@ -22,8 +22,16 @@ a:hover {
     cursor: pointer;
 }
 
+.checkbox-label {
+    margin-left: 0.75em;
+}
+
 label::before,
 label::after {
-    left: 0.25em !important;
+    left: 0.75em !important;
     top: 0.6em !important;
+}
+
+.expander {
+    transition: height 500ms ease-in-out;
 }

@@ -15,7 +15,7 @@ export default class ListSelect extends Reflux.Component<Props> {
 
   static updateCheck(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
-    console.log(currentTarget);
+    SlackActions.toggleSelected(currentTarget.id);
   }
 
   static startDownload() {
@@ -29,11 +29,18 @@ export default class ListSelect extends Reflux.Component<Props> {
   static createCheckboxes(list: Array<Object>) {
     const items = [];
     list.forEach(item => {
+      let tooltip = '';
+      if (item.purpose && item.purpose.value) {
+        tooltip = item.purpose.value;
+      } else if (item.profile && item.profile.real_name) {
+        tooltip = item.name;
+      }
       items.push(
         <div
           className="row col-md-12 custom-control custom-checkbox"
           key={`div${item.id}`}
           style={{ lineHeight: '1em', left: '0.25em' }}
+          title={tooltip}
         >
           <input
             checked={item.shouldDownload}
@@ -44,7 +51,7 @@ export default class ListSelect extends Reflux.Component<Props> {
             type="checkbox"
           />
           <label
-            className="custom-control-label form-control alert-primary"
+            className="custom-control-label form-control alert-primary checkbox-label"
             htmlFor={item.id}
             key={`label${item.id}`}
           >
@@ -61,14 +68,14 @@ export default class ListSelect extends Reflux.Component<Props> {
     const users = ListSelect.createCheckboxes(this.state.users);
     return (
       <div className="row col-md-12" style={{ height: '100vh', textAlign: 'left' }}>
-        <div className="col-md-9">
-          <h1>{this.state.team.name}</h1>
-          <div className="col-md-12" style={{ height: 'calc(100% - 4em)', overflowY: 'scroll' }}>
-            <h3>Channels</h3>
+        <div className="col-md-8">
+          <h1><i className="fa fa-slack" /> {this.state.team.name}</h1>
+          <div className="col-md-12" style={{ height: 'calc(100% - 7.5em)', overflowY: 'scroll' }}>
+            <h3><i className="fa fa-comments" /> Channels</h3>
             {channels}
-            <h3>Groups</h3>
+            <h3><i className="fa fa-users" /> Groups</h3>
             {groups}
-            <h3>Users</h3>
+            <h3><i className="fa fa-user" /> Users</h3>
             {users}
           </div>
         </div>
@@ -79,16 +86,42 @@ export default class ListSelect extends Reflux.Component<Props> {
             style={{ height: '26%', marginTop: '4%', width: '100%' }}
           >
             <div className="row col-md-12">
+              <div className="col-md-2" style={{ padding: 0 }}>
+                <i className="fa fa-cloud-download" />
+              </div>
+              <div className="col-md-10">
                 Download
+              </div>
+            </div>
+          </button>
+          <button
+            disabled
+            onClick={ListSelect.abortDownload}
+            className="btn btn-disabled"
+            style={{ height: '26%', marginTop: '7%', width: '100%' }}
+            title="Coming soon"
+          >
+            <div className="row col-md-12">
+              <div className="col-md-2" style={{ padding: 0 }}>
+                <i className="fa fa-trash" />
+              </div>
+              <div className="col-md-10" style={{ alignContent: 'right' }} >
+                Delete Files
+              </div>
             </div>
           </button>
           <button
             onClick={ListSelect.abortDownload}
-            className="btn btn-warning"
+            className="btn btn-secondary"
             style={{ height: '26%', marginTop: '7%', width: '100%' }}
           >
             <div className="row col-md-12">
-                Delete Files
+              <div className="col-md-2" style={{ padding: 0 }}>
+                <i className="fa fa-undo" />
+              </div>
+              <div className="col-md-10" style={{ alignContent: 'right' }} >
+                Back
+              </div>
             </div>
           </button>
         </div>

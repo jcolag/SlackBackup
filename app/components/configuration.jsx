@@ -13,9 +13,11 @@ export default class Configuration extends Reflux.Component<Props> {
 
   constructor(props: Props) {
     super(props);
+    this.legacyUrl = 'https://api.slack.com/custom-integrations/legacy-tokens';
     this.stores = [ConfigStore, SlackStore];
     this.state = {
       addingToken: false,
+      newTokenLength: 0,
     };
   }
 
@@ -57,7 +59,16 @@ export default class Configuration extends Reflux.Component<Props> {
 
     ConfigActions.addNewToken(token);
     this.tokenField.value = '';
-    this.setState({ addingToken: false });
+    this.setState({
+      addingToken: false,
+      newTokenLength: 0,
+    });
+  }
+
+  handleTokenUpdated() {
+    const newTokenLength = this.tokenField.value.length;
+    console.log(newTokenLength);
+    this.setState({ newTokenLength });
   }
 
   static getLists() {
@@ -73,7 +84,7 @@ export default class Configuration extends Reflux.Component<Props> {
   }
 
   static openSlackLegacyTokenGenerator() {
-    shell.openExternal('https://api.slack.com/custom-integrations/legacy-tokens');
+    shell.openExternal(this.legacyUrl);
   }
 
   render() {
@@ -91,7 +102,7 @@ export default class Configuration extends Reflux.Component<Props> {
     });
     return (
       <div style={{ textAlign: 'left' }} >
-        <h1>Configuration</h1>
+        <h1><i className="fa fa-slack" /> Configuration</h1>
         <div className="row col-md-12">
           <div className="col-md-3">
             <label htmlFor="tokens" className="form-control">Token</label>
@@ -114,13 +125,14 @@ export default class Configuration extends Reflux.Component<Props> {
               onClick={this.startAddToken.bind(this)}
               style={{ width: '100%' }}
             >
-              Add
+              <i className="fa fa-plus-square" />
+              &nbsp;Add
             </button>
           </div>
         </div>
         <div
-          className="row col-md-12"
-          style={this.state.addingToken ? null : { display: 'none' }}
+          className="row col-md-12 expander"
+          style={{ height: this.state.addingToken ? '156px' : 0, overflow: 'hidden' }}
         >
           <div className="row col-md-12" style={{ margin: '0.5em 0 0.5em 0' }}>
             <div className="col-md-1" />
@@ -130,19 +142,41 @@ export default class Configuration extends Reflux.Component<Props> {
                 className="alert-link"
                 style={{ fontSize: '1em' }}
                 onClick={Configuration.openSlackLegacyTokenGenerator}
+                title={this.legacyUrl}
               >
                 at Slack&rsquo;s legacy token generator
               </a>. You may need to log in as multiple users.
             </div>
             <div className="col-md-1" />
           </div>
-          <div className="col-md-2">
-            <button
-              onClick={this.addToken.bind(this)}
-              style={{ width: '100%' }}
-            >
-              Confirm
-            </button>
+          <div className="col-md-12 row" style={{ marginBottom: '1em' }}>
+            <div className="col-md-1" />
+            <div className="col-md-8" >
+              <input
+                className="form-control"
+                onChange={this.handleTokenUpdated.bind(this)}
+                ref={(i) => { this.tokenField = i; }}
+                style={{ width: '100%' }}
+                type="text"
+              />
+            </div>
+            <div className="col-md-3">
+              <button
+                disabled={this.state.newTokenLength < 50}
+                className="btn btn-info"
+                onClick={this.addToken.bind(this)}
+                style={{ width: '100%' }}
+              >
+                <div className="row col-md-12">
+                  <div className="col-md-3" style={{ padding: 0 }}>
+                    <i className="fa fa-check-circle" />
+                  </div>
+                  <div className="col-md-9">
+                    Confirm
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
         <div className="row col-md-12">
@@ -160,7 +194,23 @@ export default class Configuration extends Reflux.Component<Props> {
             />
           </div>
         </div>
-        <div className="row col-md-12" style={this.state.folderMissing ? { marginBottom: '1em' } : { display: 'none' }}>
+        <div
+          className="row col-md-12 expander"
+          style={
+              this.state.folderMissing ?
+                {
+                  height: '40px',
+                  marginBottom: '1em',
+                  overflow: 'hidden',
+                  paddingTop: '1px'
+                } :
+                {
+                  height: 0,
+                  overflow: 'hidden',
+                  paddingTop: '1px'
+                }
+              }
+        >
           <div className="col-md-1" />
           <div className="col-md-6 form-control alert-warning">
             The folder doesn&rsquo;t appear to exist.
@@ -173,6 +223,7 @@ export default class Configuration extends Reflux.Component<Props> {
             >
               <div className="row col-md-12">
                 <div className="col-md-3" style={{ padding: 0 }}>
+                  <i className="fa fa-folder-open" />
                 </div>
                 <div className="col-md-9">
                   Create It
@@ -192,7 +243,7 @@ export default class Configuration extends Reflux.Component<Props> {
                 checked={this.state.emptySave}
                 onChange={Configuration.updateEmptySave}
               />
-              <label htmlFor="saveempty" className="custom-control-label">
+              <label htmlFor="saveempty" className="custom-control-label checkbox-label">
                 Save Empty Conversations
               </label>
             </div>
@@ -206,13 +257,13 @@ export default class Configuration extends Reflux.Component<Props> {
                 checked={this.state.nonmemberSave}
                 onChange={Configuration.updateNonmemberSave}
               />
-              <label htmlFor="savenonmember" className="custom-control-label">
+              <label htmlFor="savenonmember" className="custom-control-label checkbox-label">
                 Save Unsubscribed Channels
               </label>
             </div>
           </div>
         </div>
-        <div className="row col-md-12">
+        <div className="row col-md-12" style={{ marginTop: '0.5em' }} >
           <div className="col-md-6">
             <button
               className="btn btn-primary"
@@ -220,7 +271,14 @@ export default class Configuration extends Reflux.Component<Props> {
               style={{ width: '100%' }}
               disabled={this.state.whichToken < 0 || this.state.folderMissing}
             >
-              List Conversations
+              <div className="row col-md-12">
+                <div className="col-md-3">
+                  <i className="fa fa-th-list" />
+                </div>
+                <div className="col-md-9">
+                  List Conversations
+                </div>
+              </div>
             </button>
           </div>
           <div className="col-md-6">
@@ -230,7 +288,14 @@ export default class Configuration extends Reflux.Component<Props> {
               style={{ width: '100%' }}
               disabled={!this.state.isDirty}
             >
-              Save Configuration
+              <div className="row col-md-12">
+                <div className="col-md-3">
+                  <i className="fa fa-user-circle" />
+                </div>
+                <div className="col-md-9">
+                  Save Configuration
+                </div>
+              </div>
             </button>
           </div>
         </div>

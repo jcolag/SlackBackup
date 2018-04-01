@@ -102,15 +102,13 @@ export class SlackStore extends Reflux.Store {
       waitingForTeam: false,
     });
     if (typeof token !== 'string') {
-      if (token.name === team.name) {
-        return;
-      }
       token = token.value;
+    } else {
+      ConfigActions.setToken({
+        name: team.name,
+        value: token,
+      });
     }
-    ConfigActions.setToken({
-      name: team.name,
-      value: token,
-    });
     this.teamName = team.name.toLowerCase().replace(/[^0-9a-z]/, '_');
   }
 
