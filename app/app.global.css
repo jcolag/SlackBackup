@@ -12,8 +12,9 @@ body {
 }
 
 a {
-    opacity: 0.75;
+    opacity: 0.3;
     text-decoration: underline dotted !important;
+    transition: opacity 1000ms !important;
 }
 
 a:hover {

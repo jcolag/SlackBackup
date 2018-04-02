@@ -140,6 +140,7 @@ export default class Configuration extends Reflux.Component<Props> {
               You can find or generate your Legacy Token API key for your Slack teams&nbsp;
               <a
                 className="alert-link"
+                draggable={false}
                 style={{ fontSize: '1em' }}
                 onClick={Configuration.openSlackLegacyTokenGenerator}
                 title={this.legacyUrl}
@@ -167,11 +168,11 @@ export default class Configuration extends Reflux.Component<Props> {
                 onClick={this.addToken.bind(this)}
                 style={{ width: '100%' }}
               >
-                <div className="row col-md-12">
-                  <div className="col-md-3" style={{ padding: 0 }}>
+                <div className="row col-md-12" style={{ paddingLeft: 0 }}>
+                  <div className="col-md-2" style={{ padding: 0 }}>
                     <i className="fa fa-check-circle" />
                   </div>
-                  <div className="col-md-9">
+                  <div className="col-md-10">
                     Confirm
                   </div>
                 </div>
