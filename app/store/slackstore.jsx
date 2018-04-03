@@ -12,6 +12,7 @@ export const SlackActions = Reflux.createActions({
   getAll: {},
   getLists: { children: ['completed', 'failed'] },
   resetDownloadState: {},
+  toggleSelected: {},
 });
 export class SlackStore extends Reflux.Store {
   constructor() {
@@ -20,6 +21,8 @@ export class SlackStore extends Reflux.Store {
       channels: [],
       groups: [],
       ims: [],
+      listsLoading: false,
+      listsFailed: false,
       team: {},
       userMap: {},
       users: [],
@@ -75,6 +78,11 @@ export class SlackStore extends Reflux.Store {
     this.getIms();
   }
 
+  /**
+   * Reset download information.
+   *
+   * @memberof SlackStore
+   */
   onResetDownloadState() {
     this.setState({
       listsFailed: null,
@@ -82,6 +90,11 @@ export class SlackStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Retrieve team information.
+   *
+   * @memberof SlackStore
+   */
   getTeam() {
     this.setState({ waitingForTeam: true });
     this.slack.team.info()
@@ -89,6 +102,11 @@ export class SlackStore extends Reflux.Store {
       .catch((error) => console.log(error));
   }
 
+  /**
+   * Store team information.
+   *
+   * @memberof SlackStore
+   */
   setTeam(data) {
     if (!data.ok) {
       console.log('Error retrieving Team information.');
@@ -136,8 +154,13 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    const { channels } = data;
+    for (let i = 0; i < channels.length; i += 1) {
+      channels[i].shouldDownload = ConfigStore.state.nonmemberSave || channels[i].is_member;
+    }
+
     this.setState({
-      channels: data.channels,
+      channels,
       waitingForChannels: false,
     });
   }
@@ -153,7 +176,7 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
-    this.state.channels.filter((c) => c.is_member || ConfigStore.state.nonmemberSave)
+    this.state.channels.filter((c) => c.shouldDownload)
       .forEach((channel) => {
         const channelFile = path
           .join(ConfigStore.state.folder, this.teamName, `channel-${channel.name}.json`);
@@ -198,8 +221,13 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    const { ims } = data;
+    for (let i = 0; i < ims.length; i += 1) {
+      ims[i].shouldDownload = this.state.userMap[ims[i].user].shouldDownload;
+    }
+
     this.setState({
-      ims: data.ims,
+      ims,
       waitingForIms: false,
     });
   }
@@ -215,7 +243,7 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
-    this.state.ims.forEach((im) => {
+    this.state.ims.filter(im => im.shouldDownload).forEach((im) => {
       const user = this.state.userMap[im.user];
       const name = user.real_name ? user.real_name : user.name;
       const imFile = path.join(ConfigStore.state.folder, this.teamName, `im-${name}.json`)
@@ -255,8 +283,13 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    const { groups } = data;
+    for (let i = 0; i < groups.length; i += 1) {
+      groups[i].shouldDownload = true;
+    }
+
     this.setState({
-      groups: data.groups,
+      groups,
       waitingForGroups: false,
     });
   }
@@ -272,7 +305,7 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
-    this.state.groups.forEach((group) => {
+    this.state.groups.filter(g => g.shouldDownload).forEach((group) => {
       const groupFile = path
         .join(ConfigStore.state.folder, this.teamName, `group-${group.name}.json`);
       const res = SlackStore.retrieveExistingMessages(groupFile);
@@ -286,6 +319,11 @@ export class SlackStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Retrieve user information.
+   *
+   * @memberof SlackStore
+   */
   getUsers() {
     this.setState({
       waitingForUserMap: true,
@@ -307,8 +345,13 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    const users = data.members;
+    for (let i = 0; i < users.length; i += 1) {
+      users[i].shouldDownload = !users[i].deleted;
+    }
+
     this.setState({
-      users: data.members,
+      users,
       waitingForUsers: false,
     });
   }
@@ -333,6 +376,42 @@ export class SlackStore extends Reflux.Store {
         .join(ConfigStore.state.folder, this.teamName, `user-${name}.json`), json);
     });
     this.setState({ waitingForUserMap: false });
+  }
+
+  /**
+   * Turn download of individual items on or off.
+   *
+   * @param {any} id The Slack object ID
+   * @memberof SlackStore
+   */
+  onToggleSelected(id) {
+    let found = false;
+    const { channels, groups, users } = this.state;
+    for (let i = 0; i < channels.length; i += 1) {
+      if (channels[i].id === id) {
+        channels[i].shouldDownload = !channels[i].shouldDownload;
+        found = true;
+      }
+    }
+    for (let i = 0; i < groups.length; i += 1) {
+      if (groups[i].id === id) {
+        groups[i].shouldDownload = !groups[i].shouldDownload;
+        found = true;
+      }
+    }
+    for (let i = 0; i < users.length; i += 1) {
+      if (users[i].id === id) {
+        users[i].shouldDownload = !users[i].shouldDownload;
+        found = true;
+      }
+    }
+    if (found) {
+      this.setState({
+        channels,
+        groups,
+        users,
+      });
+    }
   }
 
   /**
