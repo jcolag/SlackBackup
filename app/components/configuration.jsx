@@ -67,7 +67,6 @@ export default class Configuration extends Reflux.Component<Props> {
 
   handleTokenUpdated() {
     const newTokenLength = this.tokenField.value.length;
-    console.log(newTokenLength);
     this.setState({ newTokenLength });
   }
 
@@ -83,7 +82,7 @@ export default class Configuration extends Reflux.Component<Props> {
     ConfigActions.saveConfiguration();
   }
 
-  static openSlackLegacyTokenGenerator() {
+  openSlackLegacyTokenGenerator() {
     shell.openExternal(this.legacyUrl);
   }
 
@@ -101,7 +100,7 @@ export default class Configuration extends Reflux.Component<Props> {
       count += 1;
     });
     return (
-      <div style={{ textAlign: 'left' }} >
+      <div style={{ height: '100vh', textAlign: 'left' }} >
         <h1><i className="fa fa-slack" /> Configuration</h1>
         <div className="row col-md-12">
           <div className="col-md-3">
@@ -142,7 +141,7 @@ export default class Configuration extends Reflux.Component<Props> {
                 className="alert-link"
                 draggable={false}
                 style={{ fontSize: '1em' }}
-                onClick={Configuration.openSlackLegacyTokenGenerator}
+                onClick={this.openSlackLegacyTokenGenerator.bind(this)}
                 title={this.legacyUrl}
               >
                 at Slack&rsquo;s legacy token generator
@@ -168,7 +167,7 @@ export default class Configuration extends Reflux.Component<Props> {
                 onClick={this.addToken.bind(this)}
                 style={{ width: '100%' }}
               >
-                <div className="row col-md-12" style={{ paddingLeft: 0 }}>
+                <div className="row col-md-12" style={{ left: '1em', paddingLeft: 0 }}>
                   <div className="col-md-2" style={{ padding: 0 }}>
                     <i className="fa fa-check-circle" />
                   </div>
