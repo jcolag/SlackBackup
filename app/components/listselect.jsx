@@ -2,6 +2,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 import { SlackActions, SlackStore } from '../store/slackstore';
+import { UiActions } from '../store/uistore';
 
 type Props = {};
 
@@ -24,6 +25,7 @@ export default class ListSelect extends Reflux.Component<Props> {
 
   static abortDownload() {
     SlackActions.resetDownloadState();
+    UiActions.setScreen(0);
   }
 
   static createCheckboxes(list: Array<Object>) {

@@ -145,7 +145,7 @@ export default class Configuration extends Reflux.Component<Props> {
                 title={this.legacyUrl}
               >
                 at Slack&rsquo;s legacy token generator
-              </a>. You may need to log in as multiple users.
+              </a>. You may need to log in as multiple users to see all teams.
             </div>
             <div className="col-md-1" />
           </div>
