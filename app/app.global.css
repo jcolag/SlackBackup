@@ -33,6 +33,47 @@ label::after {
     top: 0.6em !important;
 }
 
+.close:hover,
+.close:focus {
+    color: #eee !important;
+}
+
 .expander {
     transition: height 500ms ease-in-out;
+}
+
+.ReactModal__Content {
+    opacity: 0;
+}
+
+.ReactModal__Content--after-open {
+    opacity: 1;
+    transition: opacity 150ms;
+}
+
+.ReactModal__Content--before-close {
+    opacity: 0;
+}
+
+.fade-wait-leave {
+    opacity: 1;
+}
+
+.fade-wait-leave.fade-wait-leave-active {
+    opacity: 0;
+    transition: opacity .4s ease-in;
+}
+
+.fade-wait-enter {
+    opacity: 0;
+}
+
+.fade-wait-enter.fade-wait-enter-active {
+    opacity: 1;
+    /* Delay the enter animation until the leave completes */
+    transition: opacity .4s ease-in .6s;
+}
+
+.fade-wait-height {
+    transition: height .6s ease-in-out;
 }
