@@ -61,13 +61,14 @@ export default class About extends Reflux.Component {
         <div className="row col-md-12 modal-body">
           <div className="row col-md-12">
             <p>
-              The&nbsp;<b>Slack Backup</b>&nbsp;application
-              is&nbsp;<i className="fa fa-copyright" />&nbsp;2018
-              John Colagioia, released under the&nbsp;
+              The <b>Slack Backup</b> application
+              is <i className="fa fa-copyright" /> 2018
+              John Colagioia, released under the
               <a
                 draggable={false}
                 href="#"
                 onClick={About.openGpl}
+                style={{ marginLeft: '0.3em' }}
               >
                 GNU General Public License, version 3
               </a>.  It has no affiliation with Slack except the use of its
@@ -75,25 +76,26 @@ export default class About extends Reflux.Component {
             </p>
             <p>
               Get or fork the source code, or file bugs and pull requests,
-              at the &nbsp;
+              at the
               <a
                 draggable={false}
                 href="#"
                 onClick={About.openRepo}
+                style={{ marginLeft: '0.3em' }}
               >
                 <i className="fa fa-github" /> GitHub
-              </a>&nbsp;repository.
+              </a> repository.
             </p>
             <p>
               Obviously not intended for use in violation of
-              &nbsp;
               <a
                 draggable={false}
                 href="#"
                 onClick={About.openSlack}
+                style={{ marginLeft: '0.3em' }}
               >
                 <i className="fa fa-slack" /> Slack&rsquo;s Terms of Service
-              </a>&nbsp;or intended to infringe on any trademarks.  It is also
+              </a> or intended to infringe on any trademarks.  It is also
               not intended for use in violating any rules or norms that the
               Slack team might have in place.  Use at your own risk.
             </p>

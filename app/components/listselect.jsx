@@ -72,7 +72,7 @@ export default class ListSelect extends Reflux.Component<Props> {
       <div className="row col-md-12" style={{ height: '100vh', textAlign: 'left' }}>
         <div className="col-md-8">
           <h1><i className="fa fa-slack" /> {this.state.team.name}</h1>
-          <div className="col-md-12" style={{ height: 'calc(100% - 7.5em)', overflowY: 'scroll' }}>
+          <div className="col-md-12" style={{ height: 'calc(100% - 11em)', overflowY: 'scroll' }}>
             <h3><i className="fa fa-comments" /> Channels</h3>
             {channels}
             <h3><i className="fa fa-users" /> Groups</h3>
@@ -81,7 +81,7 @@ export default class ListSelect extends Reflux.Component<Props> {
             {users}
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4" style={{ height: 'calc(100% - 4.5em)' }}>
           <button
             onClick={ListSelect.startDownload}
             className="btn btn-primary"
