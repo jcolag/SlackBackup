@@ -2,6 +2,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 import ReactModal from 'react-modal';
+import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import styles from './Home.css';
 import About from './about';
 import Configuration from './configuration';
@@ -83,7 +84,13 @@ export default class Home extends Reflux.Component<Props> {
               &nbsp;
             </div>
             <div className="col-md-8">
-              {currentPage}
+              <ReactCSSTransitionReplace
+                transitionName="fade-wait"
+                transitionEnterTimeout={1000}
+                transitionLeaveTimeout={1000}
+              >
+                {currentPage}
+              </ReactCSSTransitionReplace>
             </div>
             <div className="col-md-2">
               &nbsp;
