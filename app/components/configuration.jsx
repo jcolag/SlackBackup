@@ -36,6 +36,11 @@ export default class Configuration extends Reflux.Component<Props> {
     ConfigActions.setFolder(currentTarget.value);
   }
 
+  static updateDays(event: SyntheticInputEvent<HTMLInputElement>) {
+    const { currentTarget } = event;
+    ConfigActions.setFileDaysToSave(Number(currentTarget.value));
+  }
+
   static updateToken(event: SyntheticInputEvent<HTMLSelectElement>) {
     const { currentTarget } = event;
     const index = currentTarget.selectedIndex;
@@ -142,6 +147,9 @@ export default class Configuration extends Reflux.Component<Props> {
                 draggable={false}
                 style={{ fontSize: '1em' }}
                 onClick={this.openSlackLegacyTokenGenerator.bind(this)}
+                onKeyPress={this.openSlackLegacyTokenGenerator.bind(this)}
+                role="link"
+                tabIndex={0}
                 title={this.legacyUrl}
               >
                 at Slack&rsquo;s legacy token generator
@@ -232,6 +240,25 @@ export default class Configuration extends Reflux.Component<Props> {
             </button>
           </div>
           <div className="col-md-1" />
+        </div>
+        <div className="row col-md-12">
+          <div className="col-md-3">
+            <label htmlFor="days" className="form-control">Delete Files</label>
+          </div>
+          <div className="col-md-4">
+            <input
+              className="form-control"
+              id="days"
+              onChange={Configuration.updateDays}
+              type="number"
+              value={this.state.fileDaysToSave}
+            />
+          </div>
+          <div className="col-md-5">
+            <span className="form-control">
+              days older or more
+            </span>
+          </div>
         </div>
         <div className="row col-md-12">
           <div className="col-md-6">

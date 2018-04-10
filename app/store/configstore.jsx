@@ -12,6 +12,7 @@ export const ConfigActions = Reflux.createActions({
   createFolder: {},
   saveConfiguration: {},
   setEmptySave: {},
+  setFileDaysToSave: {},
   setFolder: {},
   setNonmemberSave: {},
   setToken: {},
@@ -41,6 +42,9 @@ export class ConfigStore extends Reflux.Store {
       ? config.folder
       : 'data';
     this.state = {
+      fileDaysToSave: Object.prototype.hasOwnProperty.call(config, 'fileDaysToSave')
+        ? config.fileDaysToSave
+        : 30,
       emptySave: Object.prototype.hasOwnProperty.call(config, 'emptySave')
         ? config.emptySave
         : false,
@@ -158,6 +162,17 @@ export class ConfigStore extends Reflux.Store {
     });
   }
 
+  onSetFileDaysToSave(days: number) {
+    if (days === this.state.fileDaysToSave) {
+      return;
+    }
+
+    this.setState({
+      fileDaysToSave: days,
+      isDirty: true,
+    });
+  }
+
   /**
      * Sets a new state for whether to save channels the user isn't a member of.
      *
@@ -186,6 +201,7 @@ export class ConfigStore extends Reflux.Store {
     const filename = path.join(appFolder, configFile);
     const config = {
       emptySave: this.state.emptySave,
+      fileDaysToSave: this.state.fileDaysToSave,
       folder: this.state.folder,
       nonmemberSave: this.state.nonmemberSave,
       tokens: this.state.tokens,
