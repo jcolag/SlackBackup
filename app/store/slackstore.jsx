@@ -7,10 +7,13 @@ const path = require('path');
 
 const timeout = 50;
 const indentation = 4;
+const oneDay = 86400000;
 
 export const SlackActions = Reflux.createActions({
+  deleteFiles: { children: ['completed', 'failed'] },
   getAll: {},
   getLists: { children: ['completed', 'failed'] },
+  listFiles: { children: ['completed', 'failed'] },
   resetDownloadState: {},
   toggleSelected: {},
 });
@@ -19,17 +22,23 @@ export class SlackStore extends Reflux.Store {
     super();
     this.state = {
       channels: [],
+      fileListLoading: false,
+      files: [],
+      filesLoading: false,
       groups: [],
       ims: [],
       listsLoading: false,
       listsFailed: false,
       team: {},
+      user: {},
       userMap: {},
       users: [],
       waitingForChannels: false,
+      waitingForFiles: false,
       waitingForGroups: false,
       waitingForIms: false,
       waitingForTeam: false,
+      waitingForUser: false,
       waitingForUserMap: false,
       waitingForUsers: false,
     };
@@ -50,6 +59,7 @@ export class SlackStore extends Reflux.Store {
     this.slack = new Slack({
       token,
     });
+    this.getCurrentUser();
     this.getTeam();
     this.getUsers();
     this.getChannels();
@@ -87,6 +97,37 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       listsFailed: null,
       listsLoading: null,
+    });
+  }
+
+  /**
+   * Retrieve user information.
+   *
+   * @memberof SlackStore
+   */
+  getCurrentUser() {
+    this.setState({ waitingForUser: true });
+    this.slack.auth.test()
+      .then(this.setCurrentUser.bind(this))
+      .catch((error) => console.log(error));
+  }
+
+  /**
+   * Store user information.
+   *
+   * @param {any} data
+   * @returns
+   * @memberof SlackStore
+   */
+  setCurrentUser(data) {
+    if (!data.ok) {
+      console.log('Error retrieving user information.');
+      return;
+    }
+
+    this.setState({
+      user: data,
+      waitingForUser: false,
     });
   }
 
@@ -379,6 +420,101 @@ export class SlackStore extends Reflux.Store {
   }
 
   /**
+   * Get files associated with account.
+   *
+   * @memberof SlackStore
+   */
+  onListFiles() {
+    if (this.state.waitingForUser) {
+      setTimeout(SlackActions.listFiles, 100);
+      return;
+    }
+
+    this.setState({
+      waitingForFiles: true,
+    });
+    this.slack.files.list({
+      count: 10000,
+      user: this.state.user.user_id,
+    })
+      .then(this.setFiles.bind(this))
+      .catch((error) => {
+        console.log(error);
+        SlackActions.listFiles.failed();
+      });
+  }
+
+  /**
+   * Store file information when ready.
+   *
+   * @param {any} data File data returned from Slack.
+   * @returns {null} No return
+   * @memberof SlackStore
+   */
+  setFiles(data) {
+    if (!data.ok) {
+      console.log(data);
+      this.setState({ waitingForFiles: false });
+      SlackActions.listFiles.failed();
+      return;
+    }
+
+    const { files } = data;
+    const thirtyDaysAgo = (+new Date() - (oneDay * ConfigStore.state.fileDaysToSave)) / 1000;
+    for (let i = 0; i < files.length; i += 1) {
+      files[i].shouldDelete = files[i].created <= thirtyDaysAgo
+        && (files[i].pinned_to === undefined || files[i].pinned_to.length === 0);
+    }
+
+    this.setState({
+      files,
+      waitingForFiles: false,
+    });
+    SlackActions.listFiles.completed();
+  }
+
+  /**
+   * Iterate through the file list to instruct Slack to delete those set.
+   *
+   * @returns {null} No return
+   * @memberof SlackStore
+   */
+  onDeleteFiles() {
+    console.log('onDeleteFiles()');
+    if (this.state.waitingForFiles) {
+      setTimeout(this.onDeleteFiles, timeout);
+      return;
+    }
+
+    this.state.files.forEach(file => {
+      if (file.shouldDelete) {
+        this.slack.files.delete({
+          file: file.id,
+        })
+          .then(this.removeFileFromList.bind(this, file))
+          .catch((error) => {
+            console.log(error);
+            SlackActions.deleteFiles.failed();
+          });
+      }
+    });
+    SlackActions.deleteFiles.completed();
+  }
+
+  /**
+   * Remove a file object from the files list.
+   *
+   * @param {any} file The file object
+   * @memberof SlackStore
+   */
+  removeFileFromList(file) {
+    const { files } = this.state;
+    const index = files.indexOf(file);
+    files.splice(index, 1);
+    this.setState({ files });
+  }
+
+  /**
    * Turn download of individual items on or off.
    *
    * @param {any} id The Slack object ID
@@ -386,7 +522,9 @@ export class SlackStore extends Reflux.Store {
    */
   onToggleSelected(id) {
     let found = false;
-    const { channels, groups, users } = this.state;
+    const {
+      channels, files, groups, users
+    } = this.state;
     for (let i = 0; i < channels.length; i += 1) {
       if (channels[i].id === id) {
         channels[i].shouldDownload = !channels[i].shouldDownload;
@@ -405,9 +543,16 @@ export class SlackStore extends Reflux.Store {
         found = true;
       }
     }
+    for (let i = 0; i < files.length; i += 1) {
+      if (files[i].id === id) {
+        files[i].shouldDelete = !files[i].shouldDelete;
+        found = true;
+      }
+    }
     if (found) {
       this.setState({
         channels,
+        files,
         groups,
         users,
       });
