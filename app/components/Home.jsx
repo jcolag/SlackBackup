@@ -6,6 +6,7 @@ import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import styles from './Home.css';
 import About from './about';
 import Configuration from './configuration';
+import Files from './files';
 import ListSelect from './listselect';
 import { SlackActions, SlackStore } from '../store/slackstore';
 import { UiActions, UiStore } from '../store/uistore';
@@ -50,6 +51,9 @@ export default class Home extends Reflux.Component<Props> {
       case 1:
         currentPage = <ListSelect key="select" />;
         break;
+      case 2:
+        currentPage = <Files key="files" />;
+        break;
       default:
         currentPage = <div key="empty" />;
         break;
@@ -79,7 +83,7 @@ export default class Home extends Reflux.Component<Props> {
           </div>
         </nav>
         <div className={styles.container} style={{ width: '100%' }} data-tid="container">
-          <div className="row col-md-12">
+          <div className="row col-md-12" style={{ left: '2.5em' }}>
             <div className="col-md-2">
               &nbsp;
             </div>

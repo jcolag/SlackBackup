@@ -14,6 +14,14 @@ export default class ListSelect extends Reflux.Component<Props> {
     this.stores = [SlackStore];
   }
 
+  componentDidMount() {
+    this.listsLoadedUnsubscribe = SlackActions.listFiles.completed.listen(ListSelect.onFilesLoaded);
+  }
+
+  componentWillUnmount() {
+    this.listsLoadedUnsubscribe();
+  }
+
   static updateCheck(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     SlackActions.toggleSelected(currentTarget.id);
@@ -23,9 +31,17 @@ export default class ListSelect extends Reflux.Component<Props> {
     SlackActions.getAll();
   }
 
+  static examineFiles() {
+    SlackActions.listFiles();
+  }
+
   static abortDownload() {
     SlackActions.resetDownloadState();
     UiActions.setScreen(0);
+  }
+
+  static onFilesLoaded() {
+    UiActions.setScreen(2);
   }
 
   static createCheckboxes(list: Array<Object>) {
@@ -41,7 +57,7 @@ export default class ListSelect extends Reflux.Component<Props> {
         <div
           className="row col-md-12 custom-control custom-checkbox"
           key={`div${item.id}`}
-          style={{ lineHeight: '1em', left: '0.25em' }}
+          style={{ lineHeight: '1em', left: '0.25em', paddingRight: 0 }}
           title={tooltip}
         >
           <input
@@ -86,6 +102,7 @@ export default class ListSelect extends Reflux.Component<Props> {
             onClick={ListSelect.startDownload}
             className="btn btn-primary"
             style={{ height: '26%', marginTop: '4%', width: '100%' }}
+            title="Archive selected conversations into the configured folder"
           >
             <div className="row col-md-12">
               <div className="col-md-2" style={{ padding: 0 }}>
@@ -97,18 +114,17 @@ export default class ListSelect extends Reflux.Component<Props> {
             </div>
           </button>
           <button
-            disabled
-            onClick={ListSelect.abortDownload}
-            className="btn btn-disabled"
+            onClick={ListSelect.examineFiles}
+            className="btn btn-warning"
             style={{ height: '26%', marginTop: '7%', width: '100%' }}
-            title="Coming soon"
+            title="List files associated with account and allow deletion"
           >
             <div className="row col-md-12">
               <div className="col-md-2" style={{ padding: 0 }}>
                 <i className="fa fa-trash" />
               </div>
               <div className="col-md-10" style={{ alignContent: 'right' }} >
-                Delete Files
+                View Files
               </div>
             </div>
           </button>
@@ -116,6 +132,7 @@ export default class ListSelect extends Reflux.Component<Props> {
             onClick={ListSelect.abortDownload}
             className="btn btn-secondary"
             style={{ height: '26%', marginTop: '7%', width: '100%' }}
+            title="Return to the configuration screen"
           >
             <div className="row col-md-12">
               <div className="col-md-2" style={{ padding: 0 }}>

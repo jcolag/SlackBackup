@@ -194,6 +194,7 @@
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "http": "0.0.0",
+    "moment": "^2.22.0",
     "react": "^16.2.0",
     "react-css-transition-replace": "^3.0.2",
     "react-dom": "^16.2.0",
