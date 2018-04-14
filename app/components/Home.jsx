@@ -60,9 +60,7 @@ export default class Home extends Reflux.Component<Props> {
         <Nav />
         <div className={styles.container} style={{ width: '100%' }} data-tid="container">
           <div className="row col-md-12" style={{ left: '2.5em' }}>
-            <div className="col-md-2">
-              &nbsp;
-            </div>
+            <div className="col-md-2" />
             <div className="col-md-8">
               <ReactCSSTransitionReplace
                 transitionName="fade-wait"
@@ -72,9 +70,7 @@ export default class Home extends Reflux.Component<Props> {
                 {currentPage}
               </ReactCSSTransitionReplace>
             </div>
-            <div className="col-md-2">
-              &nbsp;
-            </div>
+            <div className="col-md-2" />
           </div>
           <footer
             className="navbar navbar-expand-lg navbar-light bg-light"
@@ -84,7 +80,7 @@ export default class Home extends Reflux.Component<Props> {
           </footer>
         </div>
         <ReactModal
-          closeTimeoutMS={150}
+          closeTimeoutMS={500}
           contentLabel="About Slack Backup"
           isOpen={this.state.aboutVisible}
           shouldCloseOnEsc

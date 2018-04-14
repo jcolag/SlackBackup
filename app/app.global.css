@@ -48,7 +48,7 @@ label::after {
 
 .ReactModal__Content--after-open {
     opacity: 1;
-    transition: opacity 150ms;
+    transition: opacity 500ms;
 }
 
 .ReactModal__Content--before-close {
