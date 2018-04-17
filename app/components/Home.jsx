@@ -9,6 +9,8 @@ import Configuration from './configuration';
 import Files from './files';
 import ListSelect from './listselect';
 import Nav from './nav';
+import SearchResults from './searchresults';
+import { SearchStore } from '../store/searchstore';
 import { SlackActions, SlackStore } from '../store/slackstore';
 import { UiActions, UiStore } from '../store/uistore';
 
@@ -20,7 +22,7 @@ export default class Home extends Reflux.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    this.stores = [SlackStore, UiStore];
+    this.stores = [SearchStore, SlackStore, UiStore];
   }
 
   componentDidMount() {
@@ -50,6 +52,9 @@ export default class Home extends Reflux.Component<Props> {
         break;
       case 2:
         currentPage = <Files key="files" />;
+        break;
+      case 3:
+        currentPage = <SearchResults key="searchresults" />
         break;
       default:
         currentPage = <div key="empty" />;
