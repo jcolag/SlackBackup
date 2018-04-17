@@ -17,6 +17,7 @@ export class SearchStore extends Reflux.Store {
     };
     this.listenables = SearchActions;
     this.userMap = {};
+    this.teams = [];
   }
 
   static stringContains(source, target) {
@@ -38,6 +39,10 @@ export class SearchStore extends Reflux.Store {
           if (file.startsWith('user-')) {
             const user = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
             this.userMap[user.id] = user;
+          } else if (file === '_localuser.json') {
+            const info = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
+            info.folder = info.team.toLowerCase().replace(' ', '_');
+            this.teams.push(info);
           } else {
             files.push(fqname);
           }
@@ -48,7 +53,9 @@ export class SearchStore extends Reflux.Store {
   }
 
   onUpdateSearchString(str: string) {
-    if (str.length < 4) {
+    let user = '';
+    let teamId = 'Unknown Team';
+    if (str.length < 3) {
       this.setState({
         searchResults: [],
         target: '',
@@ -59,15 +66,27 @@ export class SearchStore extends Reflux.Store {
     const searchResults = [];
     this.updateFileList();
     this.state.searchFiles.forEach(file => {
+      const pathParts = file.split(path.sep);
+      const folder = pathParts[pathParts.length - 2];
+      const userInfo = this.teams.filter(t => t.folder === folder);
       let messages = JSON.parse(fs.readFileSync(file, 'utf-8'));
+
       if (Object.prototype.toString.call(messages) !== '[object Array]') {
         return;
       }
+
+      if (userInfo.length > 0) {
+        const info = userInfo[0];
+        user = info.user_id;
+        teamId = info.team_id;
+      }
+
       messages = messages.filter(m => SearchStore.stringContains(m.text, str));
       for (let i = 0; i < messages.length; i += 1) {
         messages[i].file = file;
         messages[i].user_object = this.userMap[messages[i].user];
-        console.log(`${messages[i].user} => ${this.userMap[messages[i].user]}`);
+        messages[i].team = teamId;
+        messages[i].user_sent = user === messages[i].user;
         searchResults.push(messages[i]);
       }
     });
@@ -75,6 +94,5 @@ export class SearchStore extends Reflux.Store {
       searchResults,
       target: str,
     });
-    console.log(this.state.searchResults);
   }
 }
