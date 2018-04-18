@@ -30,6 +30,7 @@ export class SlackStore extends Reflux.Store {
       listsLoading: false,
       listsFailed: false,
       team: {},
+      unreadMessages: 0,
       user: {},
       userMap: {},
       users: [],
@@ -47,6 +48,7 @@ export class SlackStore extends Reflux.Store {
   }
 
   onGetLists() {
+    this.setState({ unreadMessages: 0 });
     if (ConfigStore.state.whichToken < 0) {
       SlackActions.getLists.failed();
       return;
@@ -129,6 +131,25 @@ export class SlackStore extends Reflux.Store {
       user: data,
       waitingForUser: false,
     });
+    setTimeout(this.saveUserInformation.bind(this), 0, data);
+  }
+
+  /**
+   * Save object representing current user.
+   *
+   * @param {any} data User object
+   * @returns {null} Nothing
+   * @memberof SlackStore
+   */
+  saveUserInformation(data) {
+    if (this.state.waitingForTeam) {
+      setTimeout(this.saveUserInformation.bind(this), 250, data);
+      return;
+    }
+
+    const fqfile = path.join(ConfigStore.state.folder, this.teamName, '_localuser.json');
+    const json = JSON.stringify(data, null, indentation);
+    fs.writeFileSync(fqfile, json);
   }
 
   /**
@@ -226,8 +247,9 @@ export class SlackStore extends Reflux.Store {
           channel: channel.id,
           count: 1000,
           oldest: res[1],
+          unreads: true,
         })
-          .then(SlackStore.writeHistory.bind(channel, res[0], channelFile))
+          .then(this.writeHistory.bind(this, channel, res[0], channelFile))
           .catch((error) => console.log(error));
       });
   }
@@ -294,8 +316,9 @@ export class SlackStore extends Reflux.Store {
         channel: im.id,
         count: 1000,
         oldest: res[1],
+        unreads: true,
       })
-        .then(SlackStore.writeHistory.bind(im, res[0], imFile))
+        .then(this.writeHistory.bind(this, im, res[0], imFile))
         .catch((error) => console.log(error));
     });
   }
@@ -354,8 +377,9 @@ export class SlackStore extends Reflux.Store {
         channel: group.id,
         count: 1000,
         oldest: res[1],
+        unreads: true,
       })
-        .then(SlackStore.writeHistory.bind(group, res[0], groupFile))
+        .then(this.writeHistory.bind(this, group, res[0], groupFile))
         .catch((error) => console.log(error));
     });
   }
@@ -453,7 +477,6 @@ export class SlackStore extends Reflux.Store {
    */
   setFiles(data) {
     if (!data.ok) {
-      console.log(data);
       this.setState({ waitingForFiles: false });
       SlackActions.listFiles.failed();
       return;
@@ -480,7 +503,6 @@ export class SlackStore extends Reflux.Store {
    * @memberof SlackStore
    */
   onDeleteFiles() {
-    console.log('onDeleteFiles()');
     if (this.state.waitingForFiles) {
       setTimeout(this.onDeleteFiles, timeout);
       return;
@@ -591,7 +613,7 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data Data retrieved from Slack
      * @returns {null} No return
      */
-  static writeHistory(original, filename, data) {
+  writeHistory(store, original, filename, data) {
     if (data.ok) {
       const messages = data.messages
         .concat(original)
@@ -602,6 +624,9 @@ export class SlackStore extends Reflux.Store {
 
       const json = JSON.stringify(messages, null, indentation);
       fs.writeFileSync(filename, json);
+      if (data.unread_count_display) {
+        this.setState({ unreadMessages: this.state.unreadMessages + data.unread_count_display });
+      }
     }
   }
 }
