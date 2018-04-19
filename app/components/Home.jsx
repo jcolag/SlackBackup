@@ -42,6 +42,9 @@ export default class Home extends Reflux.Component<Props> {
   }
 
   render() {
+    const teamName = this.state.team ? this.state.team.name : 'this team';
+    const unread = this.state.unreadMessages;
+    const status = unread > 0 ? `You have ${unread} unread messages in ${teamName}` : <span>&nbsp;</span>;
     let currentPage = <div />;
     switch (this.state.screenToDisplay) {
       case 0:
@@ -81,7 +84,7 @@ export default class Home extends Reflux.Component<Props> {
             className="navbar navbar-expand-lg navbar-light bg-light"
             style={{ bottom: 0, position: 'absolute', width: '100%' }}
           >
-            &nbsp;
+            {status}
           </footer>
         </div>
         <ReactModal
