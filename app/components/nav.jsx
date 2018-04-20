@@ -20,7 +20,8 @@ export default class Nav extends Reflux.Component<Props> {
     UiActions.setScreen(0);
   }
 
-  static showSearch() {
+  static showSearch(event: SyntheticMouseEvent<HTMLInputElement>) {
+    event.preventDefault();
     UiActions.setScreen(3);
   }
 
@@ -78,7 +79,7 @@ export default class Nav extends Reflux.Component<Props> {
               placeholder="Search"
               type="text"
             />
-            <button className="btn btn-primary my-2 my-sm-0" type="submit" onClick={Nav.showSearch}>
+            <button className="btn btn-primary my-2 my-sm-0" onClick={Nav.showSearch}>
               <i className="fa fa-search" /> Search
             </button>
           </form>
