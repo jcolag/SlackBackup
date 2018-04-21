@@ -2,6 +2,7 @@ import Reflux from 'reflux';
 import { ConfigStore } from './configstore';
 
 const fs = require('fs');
+const Fuse = require('fuse.js');
 const path = require('path');
 
 export const SearchActions = Reflux.createActions({
@@ -18,12 +19,6 @@ export class SearchStore extends Reflux.Store {
     this.listenables = SearchActions;
     this.userMap = {};
     this.teams = [];
-  }
-
-  static stringContains(source, target) {
-    const sourceLower = source.toLowerCase();
-    const targetLower = target.toLowerCase();
-    return sourceLower.indexOf(targetLower) >= 0;
   }
 
   updateFileList() {
@@ -81,12 +76,22 @@ export class SearchStore extends Reflux.Store {
         teamId = info.team_id;
       }
 
-      messages = messages.filter(m => SearchStore.stringContains(m.text, str));
+      const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        keys: ['text'],
+        minMatchCharLength: 2,
+        threshold: 0.25,
+      };
+      const fuse = new Fuse(messages, fuseOptions);
+      messages = fuse.search(str);
+      // messages = messages.filter(m => SearchStore.stringContains(m.text, str));
       for (let i = 0; i < messages.length; i += 1) {
         messages[i].file = file;
-        messages[i].user_object = this.userMap[messages[i].user];
+        messages[i].user_object = this.userMap[messages[i].item.user];
         messages[i].team = teamId;
-        messages[i].user_sent = user === messages[i].user;
+        messages[i].user_sent = user === messages[i].item.user;
+        messages[i].is_selected = false;
         searchResults.push(messages[i]);
       }
     });

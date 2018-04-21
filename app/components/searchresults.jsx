@@ -17,23 +17,38 @@ export default class SearchResults extends Reflux.Component<Props> {
   static createMessageDisplays(list: Array<Object>) {
     const items = [];
     let number = 0;
-    list.sort((a, b) => b.ts - a.ts).forEach(item => {
-      const time = moment(new Date(item.ts * 1000)).format('ll LT');
-      const fileFrags = item.file.split('/');
+    list.sort((a, b) => a.score - b.score).forEach(message => {
+      const time = moment(new Date(message.item.ts * 1000)).format('ll LT');
+      const fileFrags = message.file.split('/');
       const nFrags = fileFrags.length;
-      const tooltip = `Team: ${fileFrags[nFrags - 2]}\n${fileFrags[nFrags - 1]}\n${time}`;
-      let username = item.user;
+      const tooltip = `Team: ${fileFrags[nFrags - 2]}\n${fileFrags[nFrags - 1]}\n${time}\nMatch Quality: ${1 - message.score}`;
+      let username = message.item.user;
       let userColor = '#999999';
-      if (item.user_object) {
-        if (item.user_object.real_name) {
-          username = item.user_object.real_name;
+      if (message.user_object) {
+        if (message.user_object.real_name) {
+          username = message.user_object.real_name;
         } else {
-          username = item.user_object.name;
+          username = message.user_object.name;
         }
-        if (item.user_object.color) {
-          userColor = `#${item.user_object.color}`;
+        if (message.user_object.color) {
+          userColor = `#${message.user_object.color}`;
         }
       }
+      const who = (
+        <div
+          className="col-md-3"
+          key={`${message.user}${message.item.ts}`}
+          style={{
+            color: userColor,
+            fontWeight: 'bold',
+            padding: 0,
+            paddingTop: '0.25em',
+            textAlign: message.user_sent ? 'left' : 'right',
+          }}
+        >
+          {username}
+        </div>
+      );
       items.push(
         <div
           className="row col-md-12"
@@ -46,19 +61,10 @@ export default class SearchResults extends Reflux.Component<Props> {
           }}
           title={tooltip}
         >
-          <div
-            className="col-md-3"
-            style={{
-              color: userColor,
-              fontWeight: 'bold',
-              padding: 0,
-              paddingTop: '0.25em'
-            }}
-          >
-            {username}
-          </div>
+          {message.user_sent && who}
           <div
             className="col-md-9"
+            key={`who${message.item.ts}`}
             style={{
               border: `1px solid ${userColor}`,
               borderRadius: '0.5em',
@@ -68,6 +74,7 @@ export default class SearchResults extends Reflux.Component<Props> {
           >
             {item.text}
           </div>
+          {!message.user_sent && who}
         </div>);
       number += 1;
     });
