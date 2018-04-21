@@ -22,8 +22,23 @@ export default class SearchResults extends Reflux.Component<Props> {
       const fileFrags = message.file.split('/');
       const nFrags = fileFrags.length;
       const tooltip = `Team: ${fileFrags[nFrags - 2]}\n${fileFrags[nFrags - 1]}\n${time}\nMatch Quality: ${1 - message.score}`;
+      const lineWidth = message.is_selected ? '3px' : '1px';
       let username = message.item.user;
       let userColor = '#999999';
+      const text = [];
+      let lastIndex = 0;
+      message.matches[0].indices.forEach(match => {
+        const start = match[0];
+        const end = match[1];
+        let len = start - lastIndex;
+        let blurb = message.item.text.substr(lastIndex, len);
+        text.push(<span key={`s${items.length}:${text.length}`}>{blurb}</span>);
+        len = (end - start) + 1;
+        blurb = message.item.text.substr(start, len);
+        text.push(<b key={`b${items.length}:${text.length}`}>{blurb}</b>);
+        lastIndex = end + 1;
+      });
+      text.push(<span>{message.item.text.substr(lastIndex)}</span>);
       if (message.user_object) {
         if (message.user_object.real_name) {
           username = message.user_object.real_name;
@@ -66,13 +81,13 @@ export default class SearchResults extends Reflux.Component<Props> {
             className="col-md-9"
             key={`who${message.item.ts}`}
             style={{
-              border: `1px solid ${userColor}`,
+              border: `${lineWidth} solid ${userColor}`,
               borderRadius: '0.5em',
               padding: '0.25em',
               userSelect: 'text',
             }}
           >
-            {item.text}
+            {text}
           </div>
           {!message.user_sent && who}
         </div>);
