@@ -1,9 +1,11 @@
+// @flow
 import Reflux from 'reflux';
 
+const { app } = require('electron').remote;
 const fs = require('fs');
 const path = require('path');
 
-const appFolder = path.dirname(process.mainModule.filename);
+const appFolder = app.getPath('userData');
 const configFile = '.slackbackuprc.json';
 const indentation = 4;
 
@@ -32,15 +34,20 @@ export class ConfigStore extends Reflux.Store {
      * @memberof ConfigStore
      */
   constructor() {
-    const filename = path.join(appFolder, configFile);
     let config = {};
     super();
+    const filename = path.join(appFolder, configFile);
+    const oldConfigFile = path.join(process.mainModule.filename, configFile);
+    let oldFile = false;
     if (fs.existsSync(filename)) {
       config = JSON.parse(fs.readFileSync(filename, 'utf-8'));
+    } else if (fs.existsSync(oldConfigFile)) {
+      config = JSON.parse(fs.readFileSync(filename, 'utf-8'));
+      oldFile = true;
     }
     const folder = Object.prototype.hasOwnProperty.call(config, 'folder')
       ? config.folder
-      : 'data';
+      : path.join(app.getPath('documents'), 'SlackBackup');
     this.state = {
       fileDaysToSave: Object.prototype.hasOwnProperty.call(config, 'fileDaysToSave')
         ? config.fileDaysToSave
@@ -50,7 +57,7 @@ export class ConfigStore extends Reflux.Store {
         : false,
       folder,
       folderMissing: !fs.existsSync(folder),
-      isDirty: false,
+      isDirty: oldFile,
       nonmemberSave: Object.prototype.hasOwnProperty.call(config, 'nonmemberSave')
         ? config.nonmemberSave
         : false,
@@ -69,7 +76,7 @@ export class ConfigStore extends Reflux.Store {
      * @returns {null} no return
      * @memberof ConfigStore
      */
-  onSetToken(newToken) {
+  onSetToken(newToken: { name: string, token: string }) {
     if (newToken === this.state.tokens[this.state.whichToken]) {
       return;
     }
@@ -82,7 +89,7 @@ export class ConfigStore extends Reflux.Store {
     });
   }
 
-  onSetTokenIndex(newIndex) {
+  onSetTokenIndex(newIndex: number) {
     if (newIndex === this.state.whichToken) {
       return;
     }
@@ -99,7 +106,7 @@ export class ConfigStore extends Reflux.Store {
    * @returns {null} no return
    * @memberof ConfigStore
    */
-  onAddNewToken(newToken) {
+  onAddNewToken(newToken: string) {
     const { tokens } = this.state;
     if (tokens.indexOf(newToken) >= 0) {
       return;
@@ -119,7 +126,7 @@ export class ConfigStore extends Reflux.Store {
      * @returns {null} no return
      * @memberof ConfigStore
      */
-  onSetFolder(newFolder) {
+  onSetFolder(newFolder: string) {
     if (newFolder === this.state.folder) {
       return;
     }
@@ -151,7 +158,7 @@ export class ConfigStore extends Reflux.Store {
      * @returns {null} no return
      * @memberof ConfigStore
      */
-  onSetEmptySave(newState) {
+  onSetEmptySave(newState: boolean) {
     if (newState === this.state.emptySave) {
       return;
     }
@@ -180,7 +187,7 @@ export class ConfigStore extends Reflux.Store {
      * @returns {null} no return
      * @memberof ConfigStore
      */
-  onSetNonmemberSave(newState) {
+  onSetNonmemberSave(newState: boolean) {
     if (newState === this.state.nonmemberSave) {
       return;
     }
