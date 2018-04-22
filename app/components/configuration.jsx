@@ -45,7 +45,7 @@ export default class Configuration extends Reflux.Component<Props> {
     const { currentTarget } = event;
     const index = currentTarget.selectedIndex;
     const option = currentTarget.children[index];
-    ConfigActions.setTokenIndex(option.value);
+    ConfigActions.setTokenIndex(Number(option.value));
   }
 
   startAddToken() {
@@ -128,6 +128,7 @@ export default class Configuration extends Reflux.Component<Props> {
               disabled={this.state.addingToken}
               onClick={this.startAddToken.bind(this)}
               style={{ width: '100%' }}
+              title="Add a new Slack legacy token"
             >
               <i className="fa fa-plus-square" />
               &nbsp;Add
@@ -187,7 +188,10 @@ export default class Configuration extends Reflux.Component<Props> {
             </div>
           </div>
         </div>
-        <div className="row col-md-12">
+        <div
+          className="row col-md-12"
+          title="Set the destination folder to archive conversations"
+        >
           <div className="col-md-3">
             <label htmlFor="folder" className="form-control">Save Folder</label>
           </div>
@@ -241,7 +245,7 @@ export default class Configuration extends Reflux.Component<Props> {
           </div>
           <div className="col-md-1" />
         </div>
-        <div className="row col-md-12">
+        <div className="row col-md-12" title="The minimum age of files to save, by default">
           <div className="col-md-3">
             <label htmlFor="days" className="form-control">Delete Files</label>
           </div>
