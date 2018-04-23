@@ -84,3 +84,9 @@ main.js.map
 
 .idea
 npm-debug.log.*
+
+# Local files
+.vscode
+*~
+.slackbackuprc.json
+
