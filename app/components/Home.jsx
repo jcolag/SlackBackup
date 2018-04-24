@@ -7,11 +7,11 @@ import styles from './Home.css';
 import About from './about';
 import Configuration from './configuration';
 import Files from './files';
+import Footer from './footer';
 import ListSelect from './listselect';
 import Nav from './nav';
 import SearchResults from './searchresults';
-import { SearchStore } from '../store/searchstore';
-import { SlackActions, SlackStore } from '../store/slackstore';
+import { SlackActions } from '../store/slackstore';
 import { UiActions, UiStore } from '../store/uistore';
 
 type Props = {};
@@ -22,7 +22,7 @@ export default class Home extends Reflux.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    this.stores = [SearchStore, SlackStore, UiStore];
+    this.stores = [UiStore];
   }
 
   componentDidMount() {
@@ -57,7 +57,7 @@ export default class Home extends Reflux.Component<Props> {
         currentPage = <Files key="files" />;
         break;
       case 3:
-        currentPage = <SearchResults key="searchresults" />
+        currentPage = <SearchResults key="searchresults" />;
         break;
       default:
         currentPage = <div key="empty" />;
@@ -80,12 +80,7 @@ export default class Home extends Reflux.Component<Props> {
             </div>
             <div className="col-md-2" />
           </div>
-          <footer
-            className="navbar navbar-expand-lg navbar-light bg-light"
-            style={{ bottom: 0, position: 'absolute', width: '100%' }}
-          >
-            {status}
-          </footer>
+          <Footer />
         </div>
         <ReactModal
           closeTimeoutMS={500}
