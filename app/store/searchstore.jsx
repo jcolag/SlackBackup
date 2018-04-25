@@ -1,3 +1,4 @@
+// @flow
 import Reflux from 'reflux';
 import { ConfigStore } from './configstore';
 
@@ -6,6 +7,7 @@ const Fuse = require('fuse.js');
 const path = require('path');
 
 export const SearchActions = Reflux.createActions({
+  highlightMessage: {},
   updateSearchString: {},
 });
 export class SearchStore extends Reflux.Store {
@@ -85,7 +87,6 @@ export class SearchStore extends Reflux.Store {
       };
       const fuse = new Fuse(messages, fuseOptions);
       messages = fuse.search(str);
-      // messages = messages.filter(m => SearchStore.stringContains(m.text, str));
       for (let i = 0; i < messages.length; i += 1) {
         messages[i].file = file;
         messages[i].user_object = this.userMap[messages[i].item.user];
@@ -99,5 +100,13 @@ export class SearchStore extends Reflux.Store {
       searchResults,
       target: str,
     });
+  }
+
+  onHighlightMessage(ts: string) {
+    const messages = this.state.searchResults;
+    for (let i = 0; i < messages.length; i += 1) {
+      const message = messages[i];
+      message.is_selected = message.item.ts === ts;
+    }
   }
 }

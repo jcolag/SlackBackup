@@ -436,9 +436,14 @@ export class SlackStore extends Reflux.Store {
       const json = JSON.stringify(user, null, indentation);
       let name = user.real_name ? user.real_name : user.name;
       name = name.replace(' ', '-');
-      this.state.userMap[user.id] = user;
-      fs.writeFileSync(path
-        .join(ConfigStore.state.folder, this.teamName, `user-${name}.json`), json);
+      if (!user.deleted) {
+        this.state.userMap[user.id] = user;
+      }
+      const filename = path.join(ConfigStore.state.folder, this.teamName, `user-${name}.json`);
+      if (fs.existsSync(filename) || user.deleted) {
+        return;
+      }
+      fs.writeFileSync(filename, json);
     });
     this.setState({ waitingForUserMap: false });
   }

@@ -2,6 +2,7 @@ import Reflux from 'reflux';
 
 export const UiActions = Reflux.createActions({
   setScreen: {},
+  setThreadVisible: {},
   toggleAbout: {},
 });
 
@@ -11,6 +12,7 @@ export class UiStore extends Reflux.Store {
     this.state = {
       aboutVisible: false,
       screenToDisplay: 0,
+      threadVisible: false,
     };
     this.listenables = UiActions;
   }
