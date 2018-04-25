@@ -149,6 +149,7 @@ export default class SearchResults extends Reflux.Component<Props> {
             }}
           >
             {messages}
+          </div>
         </div>
       </div>
     );
