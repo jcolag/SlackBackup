@@ -2,6 +2,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 import moment from 'moment';
+import Export from './export';
 import { SearchActions, SearchStore } from '../store/searchstore';
 import { ThreadActions } from '../store/threadstore';
 import { UiActions, UiStore } from '../store/uistore';
@@ -133,6 +134,8 @@ export default class SearchResults extends Reflux.Component<Props> {
 
   render() {
     const messages = SearchResults.createMessageDisplays(this.state.searchResults);
+    const resultClass = this.state.threadVisible ? 'col-md-6' : 'col-md-12';
+    const visibility = this.state.threadVisible ? 'inherit' : 'none';
     return (
       <div className="row col-md-12" style={{ height: '100vh', textAlign: 'left' }}>
         <div className={resultClass} style={{ height: '100vh', textAlign: 'left' }}>
@@ -150,6 +153,9 @@ export default class SearchResults extends Reflux.Component<Props> {
           >
             {messages}
           </div>
+        </div>
+        <div className="col-md-6" style={{ display: visibility, height: '100vh', paddingRight: 0 }}>
+          <Export />
         </div>
       </div>
     );
