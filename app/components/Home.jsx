@@ -45,6 +45,8 @@ export default class Home extends Reflux.Component<Props> {
     const teamName = this.state.team ? this.state.team.name : 'this team';
     const unread = this.state.unreadMessages;
     const status = unread > 0 ? `You have ${unread} unread messages in ${teamName}` : <span>&nbsp;</span>;
+    const gutterClass = `col-md-${this.state.gutterWidth}`;
+    const contentClass = `col-md-${12 - (this.state.gutterWidth * 2)}`;
     let currentPage = <div />;
     switch (this.state.screenToDisplay) {
       case 0:
@@ -68,8 +70,8 @@ export default class Home extends Reflux.Component<Props> {
         <Nav />
         <div className={styles.container} style={{ width: '100%' }} data-tid="container">
           <div className="row col-md-12" style={{ left: '2.5em' }}>
-            <div className="col-md-2" />
-            <div className="col-md-8">
+            <div className={gutterClass} />
+            <div className={contentClass}>
               <ReactCSSTransitionReplace
                 transitionName="fade-wait"
                 transitionEnterTimeout={1000}
@@ -78,7 +80,7 @@ export default class Home extends Reflux.Component<Props> {
                 {currentPage}
               </ReactCSSTransitionReplace>
             </div>
-            <div className="col-md-2" />
+            <div className={gutterClass} />
           </div>
           <Footer />
         </div>

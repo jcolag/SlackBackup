@@ -32,6 +32,7 @@ export default class Nav extends Reflux.Component<Props> {
   static stringUpdated(event: SyntheticInputEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     SearchActions.updateSearchString(currentTarget.value);
+    UiActions.changeGutter(2);
   }
 
   render() {
