@@ -2,11 +2,12 @@
 import React from 'react';
 import Reflux from 'reflux';
 import { SlackStore } from '../store/slackstore';
+import { UiStore } from '../store/uistore';
 
 export default class Footer extends Reflux.Component {
   constructor() {
     super();
-    this.stores = [SlackStore];
+    this.stores = [SlackStore, UiStore];
   }
 
   render() {
@@ -40,6 +41,7 @@ export default class Footer extends Reflux.Component {
       >
         {progress}
         {status}
+        {this.state.transientStatus}
         &nbsp;
       </footer>
     );

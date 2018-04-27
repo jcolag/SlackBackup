@@ -7,6 +7,8 @@ import { SearchActions, SearchStore } from '../store/searchstore';
 import { ThreadActions } from '../store/threadstore';
 import { UiActions, UiStore } from '../store/uistore';
 
+const path = require('path');
+
 type Message = {
   file: string,
   item: { ts: string, text: string, user: string },
@@ -47,7 +49,7 @@ export default class SearchResults extends Reflux.Component<Props> {
     let number = 0;
     list.sort(SearchResults.compareMessages).forEach(message => {
       const time = moment(new Date(Number(message.item.ts) * 1000)).format('ll LT');
-      const fileFrags = message.file.split('/');
+      const fileFrags = message.file.split(path.sep);
       const nFrags = fileFrags.length;
       const teamName = fileFrags[nFrags - 2];
       const fileName = fileFrags[nFrags - 1];
