@@ -3,7 +3,7 @@ import React from 'react';
 import Reflux from 'reflux';
 import ReactModal from 'react-modal';
 import { SearchActions, SearchStore } from '../store/searchstore';
-import { UiActions } from '../store/uistore';
+import { UiActions, UiStore } from '../store/uistore';
 
 type Props = {};
 ReactModal.setAppElement('#root');
@@ -32,7 +32,7 @@ export default class Nav extends Reflux.Component<Props> {
   static stringUpdated(event: SyntheticInputEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     SearchActions.updateSearchString(currentTarget.value);
-    if (this.stringUpdated.screenToDisplay === 3) {
+    if (UiStore.state.screenToDisplay === 3) {
       UiActions.changeGutter(2);
     }
     UiActions.setThreadVisible(false);
