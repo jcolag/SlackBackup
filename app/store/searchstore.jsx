@@ -8,7 +8,7 @@ const path = require('path');
 
 export const SearchActions = Reflux.createActions({
   highlightMessage: {},
-  updateSearchString: {},
+  updateSearchString: { sync: false },
 });
 export class SearchStore extends Reflux.Store {
   constructor() {
