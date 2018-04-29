@@ -79,21 +79,29 @@ export class SearchStore extends Reflux.Store {
       }
 
       const fuseOptions = {
+        caseSensitive: false,
+        findAllMatches: true,
         includeScore: true,
         includeMatches: true,
         keys: ['text'],
-        minMatchCharLength: 2,
+        minMatchCharLength: str.length / 2,
+        shouldSort: true,
         threshold: 0.25,
+        tokenize: true,
       };
       const fuse = new Fuse(messages, fuseOptions);
       messages = fuse.search(str);
       for (let i = 0; i < messages.length; i += 1) {
-        messages[i].file = file;
-        messages[i].user_object = this.userMap[messages[i].item.user];
-        messages[i].team = teamId;
-        messages[i].user_sent = user === messages[i].item.user;
-        messages[i].is_selected = false;
-        searchResults.push(messages[i]);
+        const message = messages[i];
+        message.file = file;
+        message.team = teamId;
+        message.is_selected = false;
+        if (message.item.comment) {
+          message.item.user = message.item.comment.user;
+        }
+        message.user_object = this.userMap[message.item.user];
+        message.user_sent = (user === message.item.user);
+        searchResults.push(message);
       }
     });
     this.setState({

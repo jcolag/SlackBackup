@@ -9,10 +9,11 @@ body {
     position: relative;
     height: 100%;
     overflow-y: hidden;
+    user-select: none;
 }
 
 a {
-    opacity: 0.3;
+    opacity: 0.5;
     text-decoration: underline dotted !important;
     transition: opacity 1000ms !important;
 }

@@ -59,17 +59,19 @@ export default class SearchResults extends Reflux.Component<Props> {
       let userColor = '#999999';
       const text = [];
       let lastIndex = 0;
-      message.matches[0].indices.forEach(match => {
-        const start = match[0];
-        const end = match[1];
-        let len = start - lastIndex;
-        let blurb = message.item.text.substr(lastIndex, len);
-        text.push(<span key={`s${lastIndex}`}>{blurb}</span>);
-        len = (end - start) + 1;
-        blurb = message.item.text.substr(start, len);
-        text.push(<b key={`b${lastIndex}`}>{blurb}</b>);
-        lastIndex = end + 1;
-      });
+      if (message.matches.length > 0) {
+        message.matches[0].indices.forEach(match => {
+          const start = match[0];
+          const end = match[1];
+          let len = start - lastIndex;
+          let blurb = message.item.text.substr(lastIndex, len);
+          text.push(<span key={`s${lastIndex}`}>{blurb}</span>);
+          len = (end - start) + 1;
+          blurb = message.item.text.substr(start, len);
+          text.push(<b key={`b${lastIndex}`}>{blurb}</b>);
+          lastIndex = end + 1;
+        });
+      }
       text.push(<span key={`b${lastIndex}`}>{message.item.text.substr(lastIndex)}</span>);
       if (message.user_object) {
         if (message.user_object.real_name) {
