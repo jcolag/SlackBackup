@@ -1,3 +1,4 @@
+// @flow
 import Reflux from 'reflux';
 import Slack from 'slack';
 import { ConfigActions, ConfigStore } from './configstore';
@@ -121,7 +122,7 @@ export class SlackStore extends Reflux.Store {
    * @returns
    * @memberof SlackStore
    */
-  setCurrentUser(data) {
+  setCurrentUser(data: { ok: boolean }) {
     if (!data.ok) {
       console.log('Error retrieving user information.');
       return;
@@ -141,7 +142,7 @@ export class SlackStore extends Reflux.Store {
    * @returns {null} Nothing
    * @memberof SlackStore
    */
-  saveUserInformation(data) {
+  saveUserInformation(data: {}) {
     if (this.state.waitingForTeam) {
       setTimeout(this.saveUserInformation.bind(this), 250, data);
       return;
@@ -169,7 +170,7 @@ export class SlackStore extends Reflux.Store {
    *
    * @memberof SlackStore
    */
-  setTeam(data) {
+  setTeam(data: { ok: boolean, team: { name: string } }) {
     if (!data.ok) {
       console.log('Error retrieving Team information.');
       return;
@@ -210,7 +211,7 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data Channels received from Slack.
      * @returns {null} no return
      */
-  setChannels(data) {
+  setChannels(data: { channels: { length: number }, ok: boolean }) {
     if (!data.ok) {
       this.setState({ waitingForChannels: false });
       return;
@@ -278,7 +279,7 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data Messages returned from Slack.
      * @returns {null} No return
      */
-  setIms(data) {
+  setIms(data: { ims: { length: number }, ok: boolean }) {
     if (!data.ok) {
       this.setState({ waitingForIms: false });
       return;
@@ -341,7 +342,7 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data Groups returned from Slack.
      * @returns {null} No return
      */
-  setGroups(data) {
+  setGroups(data: { groups: { length: number }, ok: boolean }) {
     if (!data.ok) {
       this.setState({ waitingForGroups: false });
       return;
@@ -404,7 +405,7 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data User data returned from Slack.
      * @returns {null} No return
      */
-  setUsers(data) {
+  setUsers(data: { members: { length: number }, ok: boolean }) {
     if (!data.ok) {
       this.setState({ waitingForUsers: false });
       return;
@@ -480,7 +481,7 @@ export class SlackStore extends Reflux.Store {
    * @returns {null} No return
    * @memberof SlackStore
    */
-  setFiles(data) {
+  setFiles(data: { files: { length: number }, ok: boolean }) {
     if (!data.ok) {
       this.setState({ waitingForFiles: false });
       SlackActions.listFiles.failed();
@@ -534,7 +535,7 @@ export class SlackStore extends Reflux.Store {
    * @param {any} file The file object
    * @memberof SlackStore
    */
-  removeFileFromList(file) {
+  removeFileFromList(file: string) {
     const { files } = this.state;
     const index = files.indexOf(file);
     files.splice(index, 1);
@@ -547,7 +548,7 @@ export class SlackStore extends Reflux.Store {
    * @param {any} id The Slack object ID
    * @memberof SlackStore
    */
-  onToggleSelected(id) {
+  onToggleSelected(id: string) {
     let found = false;
     const {
       channels, files, groups, users
