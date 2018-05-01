@@ -2,7 +2,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 import moment from 'moment';
-import { ConfigActions, ConfigStore } from '../store/configstore';
+import { ConfigStore } from '../store/configstore';
 import { SlackActions, SlackStore } from '../store/slackstore';
 
 const { shell } = require('electron');
@@ -69,7 +69,16 @@ export default class Files extends Reflux.Component<Props> {
    * @returns the list of controls
    * @memberof Files
    */
-  static createFileControls(list: Array<Object>) {
+  static createFileControls(list: Array<{
+    created: number,
+    id: string,
+    name: string,
+    permalink: string,
+    pretty_type: string,
+    shouldDelete: boolean,
+    size: number,
+    title: string
+  }>) {
     const result = [];
     const now = +new Date() / 1000;
     list.forEach(item => {

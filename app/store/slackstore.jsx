@@ -619,11 +619,17 @@ export class SlackStore extends Reflux.Store {
      * @param {any} data Data retrieved from Slack
      * @returns {null} No return
      */
-  writeHistory(store, original, filename, data) {
+  writeHistory(
+    store: {},
+    original: Array<{ ts: string }>,
+    filename: string,
+    data: { messages: Array<{ ts: string }>,
+    unread_count_display: number }
+  ) {
     if (data.ok) {
       const messages = data.messages
         .concat(original)
-        .sort((a, b) => b.ts - a.ts);
+        .sort((a, b) => Number(b.ts) - Number(a.ts));
       if (messages.length === 0 && !ConfigStore.state.emptySave) {
         return;
       }

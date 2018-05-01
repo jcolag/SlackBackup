@@ -4,6 +4,12 @@ import Reflux from 'reflux';
 import { SlackActions, SlackStore } from '../store/slackstore';
 import { UiActions } from '../store/uistore';
 
+type OptionalItem = {
+  id: string,
+  name: string,
+  profile: { real_name: string } | void,
+  shouldDownload: boolean
+};
 type Props = {};
 
 export default class ListSelect extends Reflux.Component<Props> {
@@ -44,7 +50,7 @@ export default class ListSelect extends Reflux.Component<Props> {
     UiActions.setScreen(2);
   }
 
-  static createCheckboxes(list: Array<Object>) {
+  static createCheckboxes(list: Array<OptionalItem>) {
     const items = [];
     list.forEach(item => {
       let tooltip = '';
