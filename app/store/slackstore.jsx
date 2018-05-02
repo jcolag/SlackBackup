@@ -28,6 +28,8 @@ export class SlackStore extends Reflux.Store {
       filesLoading: false,
       groups: [],
       ims: [],
+      itemsToProcess: 0,
+      itemsProcessed: 0,
       listsLoading: false,
       listsFailed: false,
       team: {},
@@ -85,6 +87,10 @@ export class SlackStore extends Reflux.Store {
   }
 
   onGetAll() {
+    this.setState({
+      itemsProcessed: 0,
+      itemsToProcess: 0,
+    });
     this.processUsers();
     this.processChannels();
     this.processGroups();
@@ -224,6 +230,7 @@ export class SlackStore extends Reflux.Store {
 
     this.setState({
       channels,
+      itemsToProcess: this.state.itemsToProcess + channels.length,
       waitingForChannels: false,
     });
   }
@@ -252,6 +259,7 @@ export class SlackStore extends Reflux.Store {
         })
           .then(this.writeHistory.bind(this, channel, res[0], channelFile))
           .catch((error) => console.log(error));
+        this.setState({ itemsProcessed: this.state.itemsProcessed + 1 });
       });
   }
 
@@ -287,11 +295,14 @@ export class SlackStore extends Reflux.Store {
 
     const { ims } = data;
     for (let i = 0; i < ims.length; i += 1) {
-      ims[i].shouldDownload = this.state.userMap[ims[i].user].shouldDownload;
+      ims[i].shouldDownload = this.state.userMap[ims[i].user]
+        ? this.state.userMap[ims[i].user].shouldDownload
+        : false;
     }
 
     this.setState({
       ims,
+      itemsToProcess: this.state.itemsToProcess + ims.length,
       waitingForIms: false,
     });
   }
@@ -321,6 +332,7 @@ export class SlackStore extends Reflux.Store {
       })
         .then(this.writeHistory.bind(this, im, res[0], imFile))
         .catch((error) => console.log(error));
+      this.setState({ itemsProcessed: this.state.itemsProcessed + 1 });
     });
   }
 
@@ -355,6 +367,7 @@ export class SlackStore extends Reflux.Store {
 
     this.setState({
       groups,
+      itemsToProcess: this.state.itemsToProcess + groups.length,
       waitingForGroups: false,
     });
   }
@@ -382,6 +395,7 @@ export class SlackStore extends Reflux.Store {
       })
         .then(this.writeHistory.bind(this, group, res[0], groupFile))
         .catch((error) => console.log(error));
+      this.setState({ itemsProcessed: this.state.itemsProcessed + 1 });
     });
   }
 
@@ -514,6 +528,10 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
+    this.setState({
+      itemsProcessed: 0,
+      itemsToProcess: this.state.files.filter(f => f.shouldDelete).length,
+    });
     this.state.files.forEach(file => {
       if (file.shouldDelete) {
         this.slack.files.delete({
@@ -524,6 +542,7 @@ export class SlackStore extends Reflux.Store {
             console.log(error);
             SlackActions.deleteFiles.failed();
           });
+        this.setState({ itemsProcessed: this.state.itemsProcessed + 1 });
       }
     });
     SlackActions.deleteFiles.completed();
@@ -597,7 +616,7 @@ export class SlackStore extends Reflux.Store {
     let messages = [];
     let lastTime = 0;
     if (fs.existsSync(filePath)) {
-      messages = JSON.parse(fs.readFileSync(filePath), 'utf-8');
+      messages = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf-8' }));
       if (messages.length > 0) {
         const msg = messages
           .reduce((max, p) => (p.ts > max ? p.ts : max));
