@@ -154,7 +154,12 @@ export class SlackStore extends Reflux.Store {
       return;
     }
 
-    const fqfile = path.join(ConfigStore.state.folder, this.teamName, '_localuser.json');
+    const folder = path.join(ConfigStore.state.folder, this.teamName);
+    if (!fs.existsSync((folder))) {
+      fs.mkdirSync(folder);
+    }
+
+    const fqfile = path.join(folder, '_localuser.json');
     const json = JSON.stringify(data, null, indentation);
     fs.writeFileSync(fqfile, json);
   }
@@ -554,7 +559,7 @@ export class SlackStore extends Reflux.Store {
    * @param {any} file The file object
    * @memberof SlackStore
    */
-  removeFileFromList(file: string) {
+  removeFileFromList(file: { }) {
     const { files } = this.state;
     const index = files.indexOf(file);
     files.splice(index, 1);

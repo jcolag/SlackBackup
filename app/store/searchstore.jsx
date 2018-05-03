@@ -90,6 +90,14 @@ export class SearchStore extends Reflux.Store {
         tokenize: true,
       };
       const fuse = new Fuse(messages, fuseOptions);
+      const noUser = {
+        color: '#777777',
+        deleted: true,
+        id: 'UUUUUUUUU',
+        is_restricted: true,
+        name: 'Unknown User',
+        team_id: 'TTTTTTTTT',
+      };
       messages = fuse.search(str);
       for (let i = 0; i < messages.length; i += 1) {
         const message = messages[i];
@@ -100,6 +108,9 @@ export class SearchStore extends Reflux.Store {
           message.item.user = message.item.comment.user;
         }
         message.user_object = this.userMap[message.item.user];
+        if (!message.user_object) {
+          message.user_object = noUser;
+        }
         message.user_sent = (user === message.item.user);
         searchResults.push(message);
       }
