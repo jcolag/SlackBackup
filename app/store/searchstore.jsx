@@ -46,7 +46,22 @@ export class SearchStore extends Reflux.Store {
         });
       }
     });
-    this.setState({ searchFiles: files });
+    const searchFiles = files.map((v, i, a) => {
+      const pathParts = v.split(path.sep);
+      const file = pathParts[pathParts.length - 1];
+      const baseName = file.split('.')[0];
+      const frags = baseName.split('-');
+      const fileType = frags.shift();
+      const displayName = frags.join(' ');
+      return {
+        displayName,
+        file,
+        path: v,
+        fileType,
+        team: pathParts[pathParts.length - 2],
+      };
+    }, this);
+    this.setState({ searchFiles });
   }
 
   onUpdateSearchString(str: string) {
@@ -63,10 +78,9 @@ export class SearchStore extends Reflux.Store {
     const searchResults = [];
     this.updateFileList();
     this.state.searchFiles.forEach(file => {
-      const pathParts = file.split(path.sep);
-      const folder = pathParts[pathParts.length - 2];
+      const folder = file.team;
       const userInfo = this.teams.filter(t => t.folder === folder);
-      let messages = JSON.parse(fs.readFileSync(file, 'utf-8'));
+      let messages = JSON.parse(fs.readFileSync(file.path, 'utf-8'));
 
       if (Object.prototype.toString.call(messages) !== '[object Array]') {
         return;
