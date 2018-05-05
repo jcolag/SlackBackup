@@ -160,7 +160,7 @@ export default class Export extends Reflux.Component<Props> {
           className="row col-md-12"
           style={{
             borderBottom: '1px solid #CCCCCC',
-            height: 'calc(100% - 10em)',
+            height: 'calc(100vh - 10em)',
             overflowX: 'hidden',
             overflowY: 'scroll',
             paddingRight: 0,
