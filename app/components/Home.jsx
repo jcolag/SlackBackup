@@ -11,6 +11,7 @@ import Footer from './footer';
 import ListSelect from './listselect';
 import Nav from './nav';
 import SearchResults from './searchresults';
+import ThreadList from './threadlist';
 import { SlackActions } from '../store/slackstore';
 import { UiActions, UiStore } from '../store/uistore';
 
@@ -60,6 +61,9 @@ export default class Home extends Reflux.Component<Props> {
         break;
       case 3:
         currentPage = <SearchResults key="searchresults" />;
+        break;
+      case 5:
+        currentPage = <ThreadList key="threadlist" />;
         break;
       default:
         currentPage = <div key="empty" />;

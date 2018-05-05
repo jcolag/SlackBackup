@@ -3,6 +3,7 @@ import React from 'react';
 import Reflux from 'reflux';
 import ReactModal from 'react-modal';
 import { SearchActions, SearchStore } from '../store/searchstore';
+import { ThreadActions } from '../store/threadstore';
 import { UiActions, UiStore } from '../store/uistore';
 
 type Props = {};
@@ -23,6 +24,14 @@ export default class Nav extends Reflux.Component<Props> {
   static showSearch(event: SyntheticMouseEvent<HTMLInputElement>) {
     event.preventDefault();
     UiActions.setScreen(3);
+  }
+
+  static showThreads(event: SyntheticMouseEvent<HTMLInputElement>) {
+    event.preventDefault();
+    SearchActions.updateFileList();
+    ThreadActions.clear();
+    UiActions.setScreen(5);
+    UiActions.changeGutter(0);
   }
 
   static showAbout() {
@@ -71,6 +80,9 @@ export default class Nav extends Reflux.Component<Props> {
               >
                 Home <span className="sr-only">(current)</span>
               </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" draggable={false} href="#" onClick={Nav.showThreads}>Conversations</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" draggable={false} href="#" onClick={Nav.showAbout}>About</a>

@@ -8,6 +8,8 @@ const path = require('path');
 
 export const SearchActions = Reflux.createActions({
   highlightMessage: {},
+  highlightThread: {},
+  updateFileList: {},
   updateSearchString: { sync: false },
 });
 export class SearchStore extends Reflux.Store {
@@ -23,7 +25,7 @@ export class SearchStore extends Reflux.Store {
     this.teams = [];
   }
 
-  updateFileList() {
+  onUpdateFileList() {
     const { folder } = ConfigStore.state;
     const subdirs = fs.readdirSync(folder);
     const files = [];
@@ -46,9 +48,11 @@ export class SearchStore extends Reflux.Store {
         });
       }
     });
-    const searchFiles = files.map((v, i, a) => {
-      const pathParts = v.split(path.sep);
+    const searchFiles = files.map((filename) => {
+      const pathParts = filename.split(path.sep);
       const file = pathParts[pathParts.length - 1];
+      const team = pathParts[pathParts.length - 2];
+      const teamInfo = this.teams.filter(t => t.folder === team)[0];
       const baseName = file.split('.')[0];
       const frags = baseName.split('-');
       const fileType = frags.shift();
@@ -56,9 +60,11 @@ export class SearchStore extends Reflux.Store {
       return {
         displayName,
         file,
-        path: v,
         fileType,
-        team: pathParts[pathParts.length - 2],
+        is_selected: false,
+        path: filename,
+        team,
+        teamInfo,
       };
     }, this);
     this.setState({ searchFiles });
@@ -76,7 +82,7 @@ export class SearchStore extends Reflux.Store {
     }
 
     const searchResults = [];
-    this.updateFileList();
+    SearchActions.updateFileList();
     this.state.searchFiles.forEach(file => {
       const folder = file.team;
       const userInfo = this.teams.filter(t => t.folder === folder);
@@ -141,5 +147,15 @@ export class SearchStore extends Reflux.Store {
       const message = messages[i];
       message.is_selected = message.item.ts === ts;
     }
+    this.setState({ searchResults: messages });
+  }
+
+  onHighlightThread(filePath: string) {
+    const files = this.state.searchFiles;
+    for (let i = 0; i < files.length; i += 1) {
+      const file = files[i];
+      file.is_selected = file.path === filePath;
+    }
+    this.setState({ searchFiles: files });
   }
 }

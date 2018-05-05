@@ -7,6 +7,7 @@ const moment = require('moment');
 const path = require('path');
 
 export const ThreadActions = Reflux.createActions({
+  clear: {},
   export: { children: ['completed'] },
   loadFile: {},
   toggleSelection: {},
@@ -24,7 +25,14 @@ export class ThreadStore extends Reflux.Store {
     this.teamInfo = {};
   }
 
-  onLoadFile(team: string, filename: string, timestamp: number) {
+  onClear() {
+    this.setState({
+      export: '',
+      thread: [],
+    });
+  }
+
+  onLoadFile(team: string, filename: string, timestamp: number | void) {
     const folder = path.join(ConfigStore.state.folder, team);
     const fqname = path.join(folder, filename);
     const teamFile = path.join(folder, '_localuser.json');
@@ -82,8 +90,12 @@ export class ThreadStore extends Reflux.Store {
       if (message.is_selected) {
         const user = this.userMap[message.user];
         const time = moment(message.ts * 1000);
-        markdown += ` > ${message.text}\n\n`;
-        markdown += `${user.real_name} (${time.format('ll LT')})\n\n`;
+        let { text } = message;
+        text = text.replace(/(\*[^\s].*[^\s]\*)/, '*$1*');
+        text = text.replace(/<(.*)\|(.*)>/, '[$2]($1)');
+        text = text.replace(/<(.*)>/, '[$1]($1)');
+        markdown += ` > ${text}\n\n`;
+        markdown += `${user ? user.real_name : 'Unknown User'} (${time.format('ll LT')})\n\n`;
       }
     }
     ThreadActions.export.completed(markdown);
