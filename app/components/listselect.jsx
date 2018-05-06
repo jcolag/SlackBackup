@@ -3,6 +3,7 @@ import React from 'react';
 import Reflux from 'reflux';
 import { SlackActions, SlackStore } from '../store/slackstore';
 import { UiActions } from '../store/uistore';
+import { VisualizationActions } from '../store/visualizationstore';
 
 type OptionalItem = {
   id: string,
@@ -12,44 +13,113 @@ type OptionalItem = {
 };
 type Props = {};
 
+/**
+ * The component to toggle selection of Slack conversations for download.
+ *
+ * @export
+ * @class ListSelect
+ * @extends {Reflux.Component<Props>}
+ */
 export default class ListSelect extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of ListSelect.
+   * @param {Props} props Component properties
+   * @memberof ListSelect
+   */
   constructor(props: Props) {
     super(props);
     this.stores = [SlackStore];
   }
 
+  /**
+   * Wait for the Slack file list to be loaded.
+   *
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   componentDidMount() {
     this.listsLoadedUnsubscribe = SlackActions.listFiles.completed.listen(ListSelect.onFilesLoaded);
   }
 
+  /**
+   * Stop waiting for the file list on exit.
+   *
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   componentWillUnmount() {
     this.listsLoadedUnsubscribe();
   }
 
+  /**
+   * Select and de-select a conversation.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   static updateCheck(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     SlackActions.toggleSelected(currentTarget.id);
   }
 
+  /**
+   * Start the conversation download from Slack.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   static startDownload() {
     SlackActions.getAll();
+    VisualizationActions.loadConversations();
   }
 
+  /**
+   * Show the file list screen.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   static examineFiles() {
     SlackActions.listFiles();
   }
 
+  /**
+   * Stop download, if possible.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   static abortDownload() {
     SlackActions.resetDownloadState();
     UiActions.setScreen(0);
   }
 
+  /**
+   * Change the screen to show files, once the file list is available.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof ListSelect
+   */
   static onFilesLoaded() {
     UiActions.setScreen(2);
   }
 
+  /**
+   * Create the components for each conversation.
+   *
+   * @static
+   * @param {Array<OptionalItem>} list Conversation objects
+   * @returns {Array} The list of check-able components
+   * @memberof ListSelect
+   */
   static createCheckboxes(list: Array<OptionalItem>) {
     const items = [];
     list.forEach(item => {
@@ -81,11 +151,18 @@ export default class ListSelect extends Reflux.Component<Props> {
           >
             {item.profile && item.profile.real_name ? item.profile.real_name : item.name}
           </label>
-        </div>);
+        </div>
+      );
     });
     return items;
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof ListSelect
+   */
   render() {
     const channels = ListSelect.createCheckboxes(this.state.channels);
     const groups = ListSelect.createCheckboxes(this.state.groups);

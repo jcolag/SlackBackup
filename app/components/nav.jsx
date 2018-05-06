@@ -9,23 +9,72 @@ import { UiActions, UiStore } from '../store/uistore';
 type Props = {};
 ReactModal.setAppElement('#root');
 
+/**
+ * The program navigation bar.
+ *
+ * @export
+ * @class Nav
+ * @extends {Reflux.Component<Props>}
+ */
 export default class Nav extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of Nav.
+   * @param {Props} props Component properties
+   * @memberof Nav
+   */
   constructor(props: Props) {
     super(props);
     this.stores = [SearchStore];
   }
 
+  /**
+   * Change to show configuration screen.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
   static returnToConfigurationScreen() {
     UiActions.setScreen(0);
   }
 
+  /**
+   * Show the search results.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
   static showSearch(event: SyntheticMouseEvent<HTMLInputElement>) {
     event.preventDefault();
     UiActions.setScreen(3);
   }
 
+  /**
+   * Show the analysis and visualization screen.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
+  static showAnalysis(event: SyntheticMouseEvent<HTMLInputElement>) {
+    event.preventDefault();
+    UiActions.setScreen(4);
+    UiActions.changeGutter(0);
+  }
+
+  /**
+   * Show the available conversations.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
   static showThreads(event: SyntheticMouseEvent<HTMLInputElement>) {
     event.preventDefault();
     SearchActions.updateFileList();
@@ -34,10 +83,25 @@ export default class Nav extends Reflux.Component<Props> {
     UiActions.changeGutter(0);
   }
 
+  /**
+   * Show the about window.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
   static showAbout() {
     UiActions.toggleAbout(true);
   }
 
+  /**
+   * Update the search string.
+   *
+   * @static
+   * @param {SyntheticInputEvent<HTMLInputElement>} event Input event
+   * @returns {void} Nothing
+   * @memberof Nav
+   */
   static stringUpdated(event: SyntheticInputEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     SearchActions.updateSearchString(currentTarget.value);
@@ -47,6 +111,12 @@ export default class Nav extends Reflux.Component<Props> {
     UiActions.setThreadVisible(false);
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof Nav
+   */
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={{ marginBottom: '1em' }} >
@@ -83,6 +153,9 @@ export default class Nav extends Reflux.Component<Props> {
             </li>
             <li className="nav-item">
               <a className="nav-link" draggable={false} href="#" onClick={Nav.showThreads}>Conversations</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" draggable={false} href="#" onClick={Nav.showAnalysis}>Analysis</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" draggable={false} href="#" onClick={Nav.showAbout}>About</a>

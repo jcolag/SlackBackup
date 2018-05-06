@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import styles from './Home.css';
 import About from './about';
+import Analysis from './analysis';
 import Configuration from './configuration';
 import Files from './files';
 import Footer from './footer';
@@ -14,38 +15,70 @@ import SearchResults from './searchresults';
 import ThreadList from './threadlist';
 import { SlackActions } from '../store/slackstore';
 import { UiActions, UiStore } from '../store/uistore';
+import { VisualizationActions, VisualizationStore } from '../store/visualizationstore';
 
 type Props = {};
 ReactModal.setAppElement('#root');
 
+/**
+ * Main screen.
+ *
+ * @export
+ * @class Home
+ * @extends {Reflux.Component<Props>}
+ */
 export default class Home extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of Home.
+   * @param {Props} props Component properties
+   * @memberof Home
+   */
   constructor(props: Props) {
     super(props);
-    this.stores = [UiStore];
+    this.stores = [UiStore, VisualizationStore];
+    VisualizationActions.loadConversations();
   }
 
+  /**
+   * Wait for Slack list retrieval to change screens.
+   *
+   * @returns {void} Nothing
+   * @memberof Home
+   */
   componentDidMount() {
     this.listsLoadedUnsubscribe = SlackActions.getLists.completed.listen(Home.onListsLoaded);
   }
 
+  /**
+   * Stop waiting for Slack lists on exit.
+   *
+   * @returns {void} Nothing
+   * @memberof Home
+   */
   componentWillUnmount() {
     this.listsLoadedUnsubscribe();
   }
 
+  /**
+   * When the list information is available, go to the relevant screen.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Home
+   */
   static onListsLoaded() {
     UiActions.setScreen(1);
   }
 
-  static screenToOpacity(s: number) {
-    return this.state.screenToDisplay === s ? 0.0 : 1.0;
-  }
-
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof Home
+   */
   render() {
-    const teamName = this.state.team ? this.state.team.name : 'this team';
-    const unread = this.state.unreadMessages;
-    const status = unread > 0 ? `You have ${unread} unread messages in ${teamName}` : <span>&nbsp;</span>;
     const gutterClass = `col-md-${this.state.gutterWidth}`;
     const contentClass = `col-md-${12 - (this.state.gutterWidth * 2)}`;
     let currentPage = <div />;
@@ -61,6 +94,9 @@ export default class Home extends Reflux.Component<Props> {
         break;
       case 3:
         currentPage = <SearchResults key="searchresults" />;
+        break;
+      case 4:
+        currentPage = <Analysis key="analysis" />;
         break;
       case 5:
         currentPage = <ThreadList key="threadlist" />;
