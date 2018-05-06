@@ -43,7 +43,8 @@
             "package.json"
         ],
         "dmg": {
-            "contents": [{
+            "contents": [
+                {
                     "x": 130,
                     "y": 220
                 },
@@ -188,6 +189,7 @@
     "dependencies": {
         "bootstrap": "^4.0.0",
         "bootswatch": "^4.0.0",
+        "d3": "^5.1.0",
         "devtron": "^1.4.0",
         "electron-debug": "^1.5.0",
         "font-awesome": "^4.7.0",
@@ -208,8 +210,10 @@
         "redux": "^3.7.2",
         "redux-thunk": "^2.2.0",
         "reflux": "^6.4.1",
+        "sentiment": "^4.2.0",
         "slack": "^11.0.0",
-        "source-map-support": "^0.5.3"
+        "source-map-support": "^0.5.3",
+        "stemmer": "^1.0.2"
     },
     "devEngines": {
         "node": ">=7.x",
