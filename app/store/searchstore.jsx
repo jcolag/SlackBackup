@@ -12,7 +12,19 @@ export const SearchActions = Reflux.createActions({
   updateFileList: {},
   updateSearchString: { sync: false },
 });
+
+/**
+ * The search store.
+ *
+ * @export
+ * @class SearchStore
+ * @extends {Reflux.Store}
+ */
 export class SearchStore extends Reflux.Store {
+  /**
+   * Creates an instance of SearchStore.
+   * @memberof SearchStore
+   */
   constructor() {
     super();
     this.state = {
@@ -25,6 +37,12 @@ export class SearchStore extends Reflux.Store {
     this.teams = [];
   }
 
+  /**
+   * Read through configured target folder to get a current set of archived files.
+   *
+   * @returns {void} Nothing
+   * @memberof SearchStore
+   */
   onUpdateFileList() {
     const { folder } = ConfigStore.state;
     const subdirs = fs.readdirSync(folder);
@@ -70,6 +88,13 @@ export class SearchStore extends Reflux.Store {
     this.setState({ searchFiles });
   }
 
+  /**
+   * Search with the new string.
+   *
+   * @param {string} str The search target.
+   * @returns {void} Nothing
+   * @memberof SearchStore
+   */
   onUpdateSearchString(str: string) {
     let user = '';
     let teamId = 'Unknown Team';
@@ -141,6 +166,13 @@ export class SearchStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Select the specified message.
+   *
+   * @param {string} ts The message timestamp
+   * @returns {void} Nothing
+   * @memberof SearchStore
+   */
   onHighlightMessage(ts: string) {
     const messages = this.state.searchResults;
     for (let i = 0; i < messages.length; i += 1) {
@@ -150,6 +182,13 @@ export class SearchStore extends Reflux.Store {
     this.setState({ searchResults: messages });
   }
 
+  /**
+   * Select the specified conversation.
+   *
+   * @param {string} filePath The conversation path
+   * @returns {void} Nothing
+   * @memberof SearchStore
+   */
   onHighlightThread(filePath: string) {
     const files = this.state.searchFiles;
     for (let i = 0; i < files.length; i += 1) {

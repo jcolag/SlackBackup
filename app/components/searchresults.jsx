@@ -20,14 +20,34 @@ type Message = {
 
 type Props = {};
 
+/**
+ * The search result screen.
+ *
+ * @export
+ * @class SearchResults
+ * @extends {Reflux.Component<Props>}
+ */
 export default class SearchResults extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of SearchResults.
+   * @param {Props} props Component properties
+   * @memberof SearchResults
+   */
   constructor(props: Props) {
     super(props);
     this.stores = [SearchStore, UiStore];
   }
 
+  /**
+   * Select and show a particular conversation.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof SearchResults
+   */
   static showThread(event: SyntheticMouseEvent<HTMLInputElement>) {
     const target = event.currentTarget;
     const { datafile, datateam, datats } = target.attributes;
@@ -37,6 +57,15 @@ export default class SearchResults extends Reflux.Component<Props> {
     ThreadActions.loadFile(datateam.value, datafile.value, Number(datats.value));
   }
 
+  /**
+   * Compare two messages for ordering.
+   *
+   * @static
+   * @param {Message} a First message
+   * @param {Message} b Second message
+   * @returns {number} A number representing the relative positioning
+   * @memberof SearchResults
+   */
   static compareMessages(a: Message, b: Message) {
     if (Number(a.score) !== Number(b.score)) {
       return Number(a.score) - Number(b.score);
@@ -44,6 +73,14 @@ export default class SearchResults extends Reflux.Component<Props> {
     return Number(b.item.ts) - Number(a.item.ts);
   }
 
+  /**
+   * Create components to show messages.
+   *
+   * @static
+   * @param {Array<Message>} list Message objects
+   * @returns {Array} an array of message components
+   * @memberof SearchResults
+   */
   static createMessageDisplays(list: Array<Message>) {
     const items = [];
     let number = 0;
@@ -130,12 +167,19 @@ export default class SearchResults extends Reflux.Component<Props> {
             {text}
           </div>
           {!message.user_sent && who}
-        </div>);
+        </div>
+      );
       number += 1;
     });
     return items;
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof SearchResults
+   */
   render() {
     const messages = SearchResults.createMessageDisplays(this.state.searchResults);
     const resultClass = this.state.threadVisible ? 'col-md-6' : 'col-md-12';

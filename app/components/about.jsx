@@ -10,27 +10,75 @@ const johnUrl = 'https://john.colagioia.net';
 const repoUrl = 'https://github.com/jcolag/SlackBackup';
 const slackUrl = 'https://slack.com/terms-of-service';
 
+/**
+ * The about box.
+ *
+ * @export
+ * @class About
+ * @extends {Reflux.Component}
+ */
 export default class About extends Reflux.Component {
+  /**
+   * Signal to close the about box.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
   static closeAbout() {
     UiActions.toggleAbout(false);
   }
 
+  /**
+   * Open a browser to show the GPL.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
   static openGpl() {
     shell.openExternal(gplUrl);
   }
 
+  /**
+   * Open John's website.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
   static openJohn() {
     shell.openExternal(johnUrl);
   }
 
+  /**
+   * Open the repository.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
   static openRepo() {
     shell.openExternal(repoUrl);
   }
 
+  /**
+   * Open a browser to Slack's terms of service.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
   static openSlack() {
     shell.openExternal(slackUrl);
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof About
+   */
   render() {
     return (
       <div>

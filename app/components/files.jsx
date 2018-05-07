@@ -38,6 +38,7 @@ export default class Files extends Reflux.Component<Props> {
    *
    * @static
    * @param {SyntheticMouseEvent<HTMLInputElement>} event The mouse event
+   * @returns {void} Nothing
    * @memberof Files
    */
   static updateCheck(event: SyntheticMouseEvent<HTMLInputElement>) {
@@ -49,7 +50,8 @@ export default class Files extends Reflux.Component<Props> {
    * Launch browser to view file.
    *
    * @static
-   * @param {string} url The file's permalink
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event The mouse event
+   * @returns {void} Nothing
    * @memberof Files
    */
   static showFile(event: SyntheticMouseEvent<HTMLInputElement>) {
@@ -57,6 +59,13 @@ export default class Files extends Reflux.Component<Props> {
     shell.openExternal(currentTarget.value);
   }
 
+  /**
+   * Delete the selected file.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Files
+   */
   static deleteSelected() {
     SlackActions.deleteFiles();
   }
@@ -66,7 +75,7 @@ export default class Files extends Reflux.Component<Props> {
    *
    * @static
    * @param {Array<Object>} list File objects
-   * @returns the list of controls
+   * @returns {Array} the list of controls
    * @memberof Files
    */
   static createFileControls(list: Array<{
@@ -140,7 +149,8 @@ export default class Files extends Reflux.Component<Props> {
               </div>
             </button>
           </div>
-        </div>);
+        </div>
+      );
     });
     return result;
   }
@@ -150,7 +160,7 @@ export default class Files extends Reflux.Component<Props> {
    *
    * @static
    * @param {number} sz size in bytes
-   * @returns the string representation
+   * @returns {string} the string representation
    * @memberof Files
    */
   static size(sz: number) {
@@ -168,7 +178,7 @@ export default class Files extends Reflux.Component<Props> {
   /**
    * Renders the component.
    *
-   * @returns The component markup
+   * @returns {{}} The component markup
    * @memberof Files
    */
   render() {

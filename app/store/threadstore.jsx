@@ -13,7 +13,18 @@ export const ThreadActions = Reflux.createActions({
   toggleSelection: {},
 });
 
+/**
+ * Store for locally-archived conversation information.
+ *
+ * @export
+ * @class ThreadStore
+ * @extends {Reflux.Store}
+ */
 export class ThreadStore extends Reflux.Store {
+  /**
+   * Creates an instance of ThreadStore.
+   * @memberof ThreadStore
+   */
   constructor() {
     super();
     this.state = {
@@ -25,6 +36,12 @@ export class ThreadStore extends Reflux.Store {
     this.teamInfo = {};
   }
 
+  /**
+   * Clear the store's current state.
+   *
+   * @returns {void} Nothing
+   * @memberof ThreadStore
+   */
   onClear() {
     this.setState({
       export: '',
@@ -32,6 +49,15 @@ export class ThreadStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Load a specified file.
+   *
+   * @param {string} team The team folder name
+   * @param {string} filename The conversation file name
+   * @param {(number | void)} timestamp Optionally, the target message timestamp
+   * @returns {void} Nothing
+   * @memberof ThreadStore
+   */
   onLoadFile(team: string, filename: string, timestamp: number | void) {
     const folder = path.join(ConfigStore.state.folder, team);
     const fqname = path.join(folder, filename);
@@ -71,6 +97,13 @@ export class ThreadStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Select or de-select a message.
+   *
+   * @param {number} ts The message timestamp
+   * @returns {void} Nothing
+   * @memberof ThreadStore
+   */
   onToggleSelection(ts: number) {
     const { thread } = this.state;
     for (let i = 0; i < thread.length; i += 1) {
@@ -82,6 +115,12 @@ export class ThreadStore extends Reflux.Store {
     this.setState({ thread });
   }
 
+  /**
+   * Export messages to Markdown.
+   *
+   * @returns {void} Nothing
+   * @memberof ThreadStore
+   */
   onExport() {
     const { thread } = this.state;
     let markdown = `### ${this.teamInfo.team} : ${this.teamInfo.filename}\n\n`;
@@ -90,6 +129,10 @@ export class ThreadStore extends Reflux.Store {
       if (message.is_selected) {
         const user = this.userMap[message.user];
         const time = moment(message.ts * 1000);
+
+        // The major differences between Slack markup an Markdown are
+        // - bold print
+        // - URLs
         let { text } = message;
         text = text.replace(/(\*[^\s].*[^\s]\*)/, '*$1*');
         text = text.replace(/<(.*)\|(.*)>/, '[$2]($1)');
@@ -101,6 +144,13 @@ export class ThreadStore extends Reflux.Store {
     ThreadActions.export.completed(markdown);
   }
 
+  /**
+   * Set export as available.
+   *
+   * @param {string} text The exported Markdown text
+   * @returns {void} Nothing
+   * @memberof ThreadStore
+   */
   onExportCompleted(text: string) {
     this.setState({ export: text });
   }

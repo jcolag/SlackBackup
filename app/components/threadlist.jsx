@@ -1,33 +1,43 @@
 // @flow
 import React from 'react';
 import Reflux from 'reflux';
-import moment from 'moment';
 import Export from './export';
 import { SearchActions, SearchStore } from '../store/searchstore';
 import { ThreadActions } from '../store/threadstore';
-import { UiActions, UiStore } from '../store/uistore';
+import { UiStore } from '../store/uistore';
 
 const path = require('path');
 
-type Message = {
-  file: { path: string },
-  item: { ts: string, text: string, user: string },
-  matches: Array<{ indices: Array<{ }> }>,
-  score: number,
-  user_object: { color: string | void, name: string, real_name: string | void },
-  user_sent: boolean
-};
-
 type Props = {};
 
+/**
+ * Screen to choose and display individual conversations.
+ *
+ * @export
+ * @class ThreadList
+ * @extends {Reflux.Component<Props>}
+ */
 export default class ThreadList extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of ThreadList.
+   * @param {Props} props Component properties
+   * @memberof ThreadList
+   */
   constructor(props: Props) {
     super(props);
     this.stores = [SearchStore, UiStore];
   }
 
+  /**
+   * Select and de-select conversations.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof ThreadList
+   */
   static toggleSelection(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     const pathName = currentTarget.attributes.id.value.substr(2);
@@ -36,6 +46,14 @@ export default class ThreadList extends Reflux.Component<Props> {
     ThreadActions.loadFile(pathParts[pathParts.length - 2], pathParts[pathParts.length - 1]);
   }
 
+  /**
+   * Generate select-able components representing available conversations.
+   *
+   * @static
+   * @param {{}} items Conversations organized by team and type
+   * @returns {Array} Array of conversation components with headers
+   * @memberof ThreadList
+   */
   static createConversationItems(items: {}) {
     const result = [];
     Object.keys(items).forEach(team => {
@@ -58,24 +76,15 @@ export default class ThreadList extends Reflux.Component<Props> {
         }
         result.push(<h3 key={`${team}${itemType}`}>&nbsp;&nbsp;{title}</h3>);
         items[team][itemType].forEach(conv => {
-          const style = conv.is_selected
-            ? {
-              backgroundColor: '#101010',
-              border: '1px solid black',
-              borderRadius: '0.5em',
-              color: '#e0e0e0',
-              marginBottom: '2px',
-              padding: '0.5em',
-              width: '100%',
-            } : {
-              backgroundColor: '#e0e0e0',
-              border: '1px solid black',
-              borderRadius: '0.5em',
-              color: '#101010',
-              marginBottom: '2px',
-              padding: '0.5em',
-              width: '100%',
-            };
+          const style = {
+            backgroundColor: conv.is_selected ? '#101010' : '#e0e0e0',
+            border: '1px solid black',
+            borderRadius: '0.5em',
+            color: conv.is_selected ? '#e0e0e0' : '#101010',
+            marginBottom: '2px',
+            padding: '0.5em',
+            width: '100%',
+          };
           result.push(
             <label htmlFor={`cb${conv.path}`} style={style}>
               {conv.displayName}
@@ -88,13 +97,20 @@ export default class ThreadList extends Reflux.Component<Props> {
                 style={{ visibility: 'none' }}
                 type="checkbox"
               />
-            </label>);
+            </label>
+          );
         });
       });
     });
     return result;
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof ThreadList
+   */
   render() {
     const filenames = {};
     this.state.searchFiles.forEach(file => {

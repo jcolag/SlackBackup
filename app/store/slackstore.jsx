@@ -18,7 +18,19 @@ export const SlackActions = Reflux.createActions({
   resetDownloadState: {},
   toggleSelected: {},
 });
+
+/**
+ * Store for Slack interactions.
+ *
+ * @export
+ * @class SlackStore
+ * @extends {Reflux.Store}
+ */
 export class SlackStore extends Reflux.Store {
+  /**
+   * Creates an instance of SlackStore.
+   * @memberof SlackStore
+   */
   constructor() {
     super();
     this.state = {
@@ -50,6 +62,12 @@ export class SlackStore extends Reflux.Store {
     this.teamName = 'unknown_team';
   }
 
+  /**
+   * Retrieve all relevant lists from Slack.
+   *
+   * @returns {void} Nothing
+   * @memberof SlackStore
+   */
   onGetLists() {
     this.setState({ unreadMessages: 0 });
     if (ConfigStore.state.whichToken < 0) {
@@ -72,6 +90,12 @@ export class SlackStore extends Reflux.Store {
     SlackActions.getLists.completed();
   }
 
+  /**
+   * Lists could not be retrieved.
+   *
+   * @returns {void} Nothing
+   * @memberof SlackStore
+   */
   onGetListsFailed() {
     this.setState({
       listsFailed: true,
@@ -79,6 +103,12 @@ export class SlackStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Lists have been retrieved.
+   *
+   * @returns {void} Nothing
+   * @memberof SlackStore
+   */
   onGetListsCompleted() {
     this.setState({
       listsFailed: false,
@@ -86,6 +116,12 @@ export class SlackStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Retrieve the contents of the lists.
+   *
+   * @returns {void} Nothing
+   * @memberof SlackStore
+   */
   onGetAll() {
     this.setState({
       itemsProcessed: 0,
@@ -100,6 +136,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Reset download information.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   onResetDownloadState() {
@@ -112,6 +149,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Retrieve user information.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   getCurrentUser() {
@@ -124,8 +162,8 @@ export class SlackStore extends Reflux.Store {
   /**
    * Store user information.
    *
-   * @param {any} data
-   * @returns
+   * @param {any} data Content returned from Slack for the user
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   setCurrentUser(data: { ok: boolean }) {
@@ -167,6 +205,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Retrieve team information.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   getTeam() {
@@ -179,6 +218,8 @@ export class SlackStore extends Reflux.Store {
   /**
    * Store team information.
    *
+   * @param {any} data Team object
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   setTeam(data: { ok: boolean, team: { name: string } }) {
@@ -207,6 +248,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Start process of retrieving channels.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   getChannels() {
@@ -344,6 +386,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Retrieve group information.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   getGroups() {
@@ -407,6 +450,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Retrieve user information.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   getUsers() {
@@ -471,6 +515,7 @@ export class SlackStore extends Reflux.Store {
   /**
    * Get files associated with account.
    *
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   onListFiles() {
@@ -557,6 +602,7 @@ export class SlackStore extends Reflux.Store {
    * Remove a file object from the files list.
    *
    * @param {any} file The file object
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   removeFileFromList(file: { }) {
@@ -570,6 +616,7 @@ export class SlackStore extends Reflux.Store {
    * Turn download of individual items on or off.
    *
    * @param {any} id The Slack object ID
+   * @returns {void} Nothing
    * @memberof SlackStore
    */
   onToggleSelected(id: string) {
@@ -638,6 +685,7 @@ export class SlackStore extends Reflux.Store {
   /**
      * Add recent messages to those already saved.
      *
+     * @param {any} store Unused
      * @param {any} original Existing messages
      * @param {any} filename Target file
      * @param {any} data Data retrieved from Slack

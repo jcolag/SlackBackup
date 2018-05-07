@@ -8,9 +8,21 @@ const { shell } = require('electron');
 
 type Props = {};
 
+/**
+ * The configuration screen.
+ *
+ * @export
+ * @class Configuration
+ * @extends {Reflux.Component<Props>}
+ */
 export default class Configuration extends Reflux.Component<Props> {
   props: Props;
 
+  /**
+   * Creates an instance of Configuration.
+   * @param {Props} props Component properties
+   * @memberof Configuration
+   */
   constructor(props: Props) {
     super(props);
     this.legacyUrl = 'https://api.slack.com/custom-integrations/legacy-tokens';
@@ -21,26 +33,66 @@ export default class Configuration extends Reflux.Component<Props> {
     };
   }
 
+  /**
+   * Change the save-empty configuration option.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static updateEmptySave(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     ConfigActions.setEmptySave(currentTarget.checked);
   }
 
+  /**
+   * Change the save-unused configuration option.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static updateNonmemberSave(event: SyntheticMouseEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     ConfigActions.setNonmemberSave(currentTarget.checked);
   }
 
+  /**
+   * Change the target folder path.
+   *
+   * @static
+   * @param {SyntheticInputEvent<HTMLInputElement>} event Input event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static updateFolder(event: SyntheticInputEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     ConfigActions.setFolder(currentTarget.value);
   }
 
+  /**
+   * Change the number of days of files before recommending deletion.
+   *
+   * @static
+   * @param {SyntheticInputEvent<HTMLInputElement>} event Input event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static updateDays(event: SyntheticInputEvent<HTMLInputElement>) {
     const { currentTarget } = event;
     ConfigActions.setFileDaysToSave(Number(currentTarget.value));
   }
 
+  /**
+   * Update token information.
+   *
+   * @static
+   * @param {SyntheticInputEvent<HTMLSelectElement>} event Input event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static updateToken(event: SyntheticInputEvent<HTMLSelectElement>) {
     const { currentTarget } = event;
     const index = currentTarget.selectedIndex;
@@ -48,10 +100,22 @@ export default class Configuration extends Reflux.Component<Props> {
     ConfigActions.setTokenIndex(Number(option.value));
   }
 
+  /**
+   * Set tokens as being in-process.
+   *
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   startAddToken() {
     this.setState({ addingToken: true });
   }
 
+  /**
+   * Add the new token.
+   *
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   addToken() {
     if (!this.tokenField) {
       return;
@@ -70,27 +134,66 @@ export default class Configuration extends Reflux.Component<Props> {
     });
   }
 
+  /**
+   * Flag typed token as updated.
+   *
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   handleTokenUpdated() {
     const newTokenLength = this.tokenField.value.length;
     this.setState({ newTokenLength });
   }
 
+  /**
+   * Start process of getting Slack information.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static getLists() {
     SlackActions.getLists();
   }
 
+  /**
+   * Create the target folder.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static createFolder() {
     ConfigActions.createFolder();
   }
 
+  /**
+   * Save current configuration information.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   static saveConfig() {
     ConfigActions.saveConfiguration();
   }
 
+  /**
+   * Have a browser point to Slack's legacy token page.
+   *
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
   openSlackLegacyTokenGenerator() {
     shell.openExternal(this.legacyUrl);
   }
 
+  /**
+   * Render the component.
+   *
+   * @returns {{}} the component
+   * @memberof Configuration
+   */
   render() {
     const tokenOptions = [<option key="null-token" value={-1} />];
     let count = 0;

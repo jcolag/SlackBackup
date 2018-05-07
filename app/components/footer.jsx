@@ -4,12 +4,29 @@ import Reflux from 'reflux';
 import { SlackStore } from '../store/slackstore';
 import { UiStore } from '../store/uistore';
 
+/**
+ * Program status bar.
+ *
+ * @export
+ * @class Footer
+ * @extends {Reflux.Component}
+ */
 export default class Footer extends Reflux.Component {
+  /**
+   * Creates an instance of Footer.
+   * @memberof Footer
+   */
   constructor() {
     super();
     this.stores = [SlackStore, UiStore];
   }
 
+  /**
+   * Render the footer.
+   *
+   * @returns {{}} the component
+   * @memberof Footer
+   */
   render() {
     const teamName = this.state.team ? this.state.team.name : 'this team';
     const unread = this.state.unreadMessages;
