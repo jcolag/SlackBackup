@@ -127,6 +127,7 @@ export default class SearchResults extends Reflux.Component<Props> {
           style={{
             color: userColor,
             fontWeight: 'bold',
+            overflowWrap: 'break-word',
             padding: 0,
             paddingTop: '0.25em',
             textAlign: message.user_sent ? 'left' : 'right',
@@ -147,6 +148,7 @@ export default class SearchResults extends Reflux.Component<Props> {
             lineHeight: '1em',
             left: '0.25em',
             marginTop: '2px',
+            overflowWrap: 'break-word',
             padding: 0
           }}
           datateam={teamName}
@@ -160,6 +162,7 @@ export default class SearchResults extends Reflux.Component<Props> {
             style={{
               border: `${lineWidth} solid ${userColor}`,
               borderRadius: '0.5em',
+              overflowWrap: 'break-word',
               padding: '0.25em',
               userSelect: 'text',
             }}
