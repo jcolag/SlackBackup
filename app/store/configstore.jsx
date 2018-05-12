@@ -13,6 +13,7 @@ export const ConfigActions = Reflux.createActions({
   addNewToken: {},
   createFolder: {},
   saveConfiguration: {},
+  setComparativeSentiment: {},
   setEmptySave: {},
   setFileDaysToSave: {},
   setFolder: {},
@@ -49,12 +50,15 @@ export class ConfigStore extends Reflux.Store {
       ? config.folder
       : path.join(app.getPath('documents'), 'SlackBackup');
     this.state = {
-      fileDaysToSave: Object.prototype.hasOwnProperty.call(config, 'fileDaysToSave')
-        ? config.fileDaysToSave
-        : 30,
+      comparativeSentiment: Object.prototype.hasOwnProperty.call(config, 'comparativeSentiment')
+        ? config.comparativeSentiment
+        : false,
       emptySave: Object.prototype.hasOwnProperty.call(config, 'emptySave')
         ? config.emptySave
         : false,
+      fileDaysToSave: Object.prototype.hasOwnProperty.call(config, 'fileDaysToSave')
+        ? config.fileDaysToSave
+        : 30,
       folder,
       folderMissing: !fs.existsSync(folder),
       isDirty: oldFile,
@@ -89,6 +93,13 @@ export class ConfigStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Changes the selected token.
+   *
+   * @param {number} newIndex The specified token
+   * @returns {void} nothing
+   * @memberof ConfigStore
+   */
   onSetTokenIndex(newIndex: number) {
     if (newIndex === this.state.whichToken) {
       return;
@@ -138,6 +149,12 @@ export class ConfigStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Creates the save folder.
+   *
+   * @returns {void} nothing
+   * @memberof ConfigStore
+   */
   onCreateFolder() {
     if (!this.state.folder || this.state.folder === '') {
       return;
@@ -169,6 +186,13 @@ export class ConfigStore extends Reflux.Store {
     });
   }
 
+  /**
+   * Changes the number of days before recommending file deletion.
+   *
+   * @param {number} days Recommended days
+   * @returns {void} nothing
+   * @memberof ConfigStore
+   */
   onSetFileDaysToSave(days: number) {
     if (days === this.state.fileDaysToSave) {
       return;
@@ -199,6 +223,24 @@ export class ConfigStore extends Reflux.Store {
   }
 
   /**
+   * Changes the type of sentiment analysis.
+   *
+   * @param {boolean} newState The new state
+   * @returns {void} nothing
+   * @memberof ConfigStore
+   */
+  onSetComparativeSentiment(newState: boolean) {
+    if (newState === this.state.comparativeSentiment) {
+      return;
+    }
+
+    this.setState({
+      isDirty: true,
+      comparativeSentiment: newState,
+    });
+  }
+
+  /**
      * Saves the current configuration.
      *
      * @returns {null} no return
@@ -207,6 +249,7 @@ export class ConfigStore extends Reflux.Store {
   onSaveConfiguration() {
     const filename = path.join(appFolder, configFile);
     const config = {
+      comparativeSentiment: this.state.comparativeSentiment,
       emptySave: this.state.emptySave,
       fileDaysToSave: this.state.fileDaysToSave,
       folder: this.state.folder,
