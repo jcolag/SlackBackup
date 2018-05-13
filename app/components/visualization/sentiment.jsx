@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Reflux from 'reflux';
+import { ConfigStore } from '../../store/configstore';
 import { VisualizationActions, VisualizationStore } from '../../store/visualizationstore';
 
 const d3 = require('d3');
@@ -25,7 +26,7 @@ export default class Sentiment extends Reflux.Component<Props> {
    */
   constructor(props: Props) {
     super(props);
-    this.stores = [VisualizationStore];
+    this.stores = [ConfigStore, VisualizationStore];
   }
 
   /**
@@ -57,7 +58,7 @@ export default class Sentiment extends Reflux.Component<Props> {
    * @memberof Sentiment
    */
   drawSentiment() {
-    const normalize = false;
+    const normalize = this.state.comparativeSentiment;
     const container = d3.select(this.sentiment);
     const { clientHeight, clientWidth } = container._groups[0][0];
     let minTs = Number.MAX_VALUE;
