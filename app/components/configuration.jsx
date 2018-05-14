@@ -60,6 +60,19 @@ export default class Configuration extends Reflux.Component<Props> {
   }
 
   /**
+   * Change the type of sentiment analysis.
+   *
+   * @static
+   * @param {SyntheticMouseEvent<HTMLInputElement>} event Click event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
+  static updateComparativeSentiment(event: SyntheticMouseEvent<HTMLInputElement>) {
+    const { currentTarget } = event;
+    ConfigActions.setComparativeSentiment(currentTarget.checked);
+  }
+
+  /**
    * Change the target folder path.
    *
    * @static
@@ -393,6 +406,25 @@ export default class Configuration extends Reflux.Component<Props> {
               />
               <label htmlFor="savenonmember" className="custom-control-label checkbox-label">
                 Save Unsubscribed Channels
+              </label>
+            </div>
+          </div>
+        </div>
+        <div className="row col-md-12" style={{ marginTop: '0.5em' }}>
+          <div
+            className="col-md-6"
+            title="When performing sentiment analysis, Comparative takes the lengths of posts into account"
+          >
+            <div className="custom-control custom-checkbox form-control">
+              <input
+                className="custom-control-input"
+                id="comparesentiment"
+                type="checkbox"
+                checked={this.state.comparativeSentiment}
+                onChange={Configuration.updateComparativeSentiment}
+              />
+              <label htmlFor="comparesentiment" className="custom-control-label checkbox-label">
+                Use Comparative Sentiment
               </label>
             </div>
           </div>
