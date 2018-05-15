@@ -154,6 +154,7 @@ export default class Export extends Reflux.Component<Props> {
             borderRadius: '0.25em',
             lineHeight: '1em',
             marginBottom: '1px',
+            overflowWrap: 'break-word',
             padding: '0.25em',
             width: '100%'
           }}
