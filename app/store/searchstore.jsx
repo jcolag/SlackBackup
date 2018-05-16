@@ -156,6 +156,9 @@ export class SearchStore extends Reflux.Store {
         if (!message.user_object) {
           message.user_object = noUser;
         }
+        if (!message.item.user) {
+          message.item.user = noUser.id;
+        }
         message.user_sent = (user === message.item.user);
         searchResults.push(message);
       }
