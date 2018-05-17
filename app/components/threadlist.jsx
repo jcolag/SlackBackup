@@ -74,7 +74,7 @@ export default class ThreadList extends Reflux.Component<Props> {
             title = <span><i className="fa fa-star-o" /> {itemType}</span>;
             break;
         }
-        result.push(<h3 key={`${team}${itemType}`}>&nbsp;&nbsp;{title}</h3>);
+        result.push(<h3 key={`${team} ${itemType}`}>&nbsp;&nbsp;{title}</h3>);
         items[team][itemType].forEach(conv => {
           const style = {
             backgroundColor: conv.is_selected ? '#101010' : '#e0e0e0',
@@ -86,7 +86,7 @@ export default class ThreadList extends Reflux.Component<Props> {
             width: '100%',
           };
           result.push(
-            <label htmlFor={`cb${conv.path}`} style={style}>
+            <label htmlFor={`cb${conv.path}`} key={conv.path} style={style}>
               {conv.displayName}
               <input
                 checked={conv.is_selected}
