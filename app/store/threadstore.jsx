@@ -134,9 +134,24 @@ export class ThreadStore extends Reflux.Store {
         // - bold print
         // - URLs
         let { text } = message;
-        text = text.replace(/(\*[^\s].*[^\s]\*)/, '*$1*');
-        text = text.replace(/<(.*)\|(.*)>/, '[$2]($1)');
-        text = text.replace(/<(.*)>/, '[$1]($1)');
+        text = text.replace(/(\*[^\s].*[^\s]\*)/g, '**$1**');
+        text = text.replace(/<!([^>]*)>/g, (str, match) => `**${match}**`);
+        text = text.replace(/<@(U[0-9A-Z]*)>/g, (str, match) => {
+          const namedUser = this.userMap[match];
+          let printedName = 'Unknown User';
+          if (namedUser) {
+            if (namedUser.real_name) {
+              printedName = namedUser.real_name;
+            } else {
+              printedName = namedUser.name;
+            }
+          }
+          return `**${printedName}**`;
+        });
+        text = text.replace(/<#C[0-9A-Z]*\|([^>]*)>/g, (str, match) => `**#${match}**`);
+        text = text.replace(/<([^<|]*)\|([^<>]*)>/g, '[$2]($1)');
+        text = text.replace(/<([^<>]*)>/g, '[$1]($1)');
+        text = text.replace(/^&gt; /g, '> ');
         markdown += ` > ${text}\n\n`;
         markdown += `${user ? user.real_name : 'Unknown User'} (${time.format('ll LT')})\n\n`;
       }
