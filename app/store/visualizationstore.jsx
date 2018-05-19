@@ -77,6 +77,7 @@ export class VisualizationStore extends Reflux.Store {
     });
     sentiments = sentiments.sort((a, b) => a.ts - b.ts);
     while (sentiments[2].ts - sentiments[0].ts > 30 * 24 * 60 * 60) {
+      // If early messages are more than a month older than the rest, drop them
       sentiments.shift();
     }
     this.setState({ sentiments });
