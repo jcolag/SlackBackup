@@ -131,24 +131,24 @@ export default class Relationship extends Reflux.Component<Props> {
           width: 'calc(100% - 2px)'
         }}
       >
-        {this.state.links.map((link, index) =>
+        {this.state.links.map((link) =>
           (
             <line
               x1={link.source.x}
               y1={link.source.y}
               x2={link.target.x}
               y2={link.target.y}
-              key={`line-${index}`}
+              key={`line-${link.source.x}-${link.source.y}-${link.target.x}-${link.target.y}`}
               stroke="black"
             />
           ))}
-        {this.state.nodes.map((node, index) => (
+        {this.state.nodes.map((node) => (
           <circle
             r={node.r}
             cx={node.x}
             cy={node.y}
             fill={node.color}
-            key={index}
+            key={`node-${node.x}-${node.y}`}
             stroke={node.stroke}
             strokeWidth="2"
           >
