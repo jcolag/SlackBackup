@@ -28,11 +28,11 @@ As a quick overview to *SlackBackup*, there are six major screens:  [Configurati
 
 The configuration screen should be fairly straightforward.  You will decide on or add...
 
- * A token to access each Slack team; clicking **Add** will walk you through the process.
- * A folder where you'll save archived Slack messages.  Inside your documents folder will be recommended by default.
- * A number of days you want to ignore files and images you have sent to other users.  *SlackBackup* will not act on this until you say so, and you will have the opportunity to change the decision on a file-by-file basis.
- * Whether you want to save conversations with no content.  You can ignore this, but may have a small effect on some visualizations, especially in the future.
- * Whether you want to save Slack channels that you are not subscribed to.  This will affect what you can search.
+* A token to access each Slack team; clicking **Add** will walk you through the process.
+* A folder where you'll save archived Slack messages.  Inside your documents folder will be recommended by default.
+* A number of days you want to ignore files and images you have sent to other users.  *SlackBackup* will not act on this until you say so, and you will have the opportunity to change the decision on a file-by-file basis.
+* Whether you want to save conversations with no content.  You can ignore this, but may have a small effect on some visualizations, especially in the future.
+* Whether you want to save Slack channels that you are not subscribed to.  This will affect what you can search.
 
 When done with any changes, click **Save Configuration** to remember this setup.  Note that, if you're uncomfortable with leaving your Slack tokens on your computer, you shouldn't save them as part of the configuration.
 
@@ -72,11 +72,10 @@ The search results work almost identically to the [Conversations](#conversations
 
 The **Analysis** item on the main menu currently allows for three visualizations of the downloaded data.
 
- * *Sentiment* shows a "relative happiness ranking" for each of your messages archived.  It uses the [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) list via [a third-party library](https://github.com/thisandagain/sentiment) to guess at the intent behind the message.  Note that it doesn't understand sarcasm, so...
- * *Relationships* isn't perfect, but attempts to give a sense of who you deal with the most.  The dots are sized to how much that person posts where you read and should be approximately at a distance representing how often you send messages to where they read.
- * *Vocabulary* likewise isn't perfect, but strips out [stop words](https://en.wikipedia.org/wiki/Stop_words) and finds the [stem](https://en.wikipedia.org/wiki/Stemming) of each word you use to give a sense of what words you use most, subject to what will fit reasonably on the screen.
+* *Sentiment* shows a "relative happiness ranking" for each of your messages archived.  It uses the [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) list via [a third-party library](https://github.com/thisandagain/sentiment) to guess at the intent behind the message.  Note that it doesn't understand sarcasm, so...
+* *Relationships* isn't perfect, but attempts to give a sense of who you deal with the most.  The dots are sized to how much that person posts where you read and should be approximately at a distance representing how often you send messages to where they read.
+* *Vocabulary* likewise isn't perfect, but strips out [stop words](https://en.wikipedia.org/wiki/Stop_words) and finds the [stem](https://en.wikipedia.org/wiki/Stemming) of each word you use to give a sense of what words you use most, subject to what will fit reasonably on the screen.
 
 ## Contribution
 
 Please do!  This needs help.  There is still boilerplate code that hasn't been removed, most people probably don't care about exporting to Markdown, and the visualizations could probably use a lot of work, not to mention expansion.
-
