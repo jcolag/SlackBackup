@@ -5,6 +5,7 @@ import { UiActions } from '../store/uistore';
 
 const { shell } = require('electron');
 
+const ccByUrl = 'https://creativecommons.org/licenses/by/3.0/us/';
 const gplUrl = 'https://www.gnu.org/licenses/gpl-3.0.en.html';
 const johnUrl = 'https://john.colagioia.net';
 const repoUrl = 'https://github.com/jcolag/SlackBackup';
@@ -71,6 +72,17 @@ export default class About extends Reflux.Component {
    */
   static openSlack() {
     shell.openExternal(slackUrl);
+  }
+
+  /**
+   * Open a browser to CC-BY-3.0.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
+  static openCcBy() {
+    shell.openExternal(ccByUrl);
   }
 
   /**
@@ -146,6 +158,18 @@ export default class About extends Reflux.Component {
               </a> or intended to infringe on any trademarks.  It is also
               not intended for use in violating any rules or norms that the
               Slack team might have in place.  Use at your own risk.
+            </p>
+            <p style={{ fontSize: 'small' }}>
+              The program icon is based on TV by Jems Mayor from the Noun
+              Project under the terms of the
+              <a
+                draggable={false}
+                href="#"
+                onClick={About.openCcBy}
+                style={{ marginLeft: '0.3em' }}
+              >
+                Creative Commons Attribution 3.0
+              </a> license.
             </p>
           </div>
           <div className="row col-md-12">
