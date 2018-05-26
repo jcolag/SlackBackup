@@ -7,6 +7,7 @@ const { shell } = require('electron');
 
 const ccByUrl = 'https://creativecommons.org/licenses/by/3.0/us/';
 const gplUrl = 'https://www.gnu.org/licenses/gpl-3.0.en.html';
+const iconUrl = 'https://thenounproject.com/jum/collection/motion-pictograms/?i=126781';
 const johnUrl = 'https://john.colagioia.net';
 const repoUrl = 'https://github.com/jcolag/SlackBackup';
 const slackUrl = 'https://slack.com/terms-of-service';
@@ -86,6 +87,17 @@ export default class About extends Reflux.Component {
   }
 
   /**
+   * Open a browser to the icon source at the Noun Project.
+   *
+   * @static
+   * @returns {void} Nothing
+   * @memberof About
+   */
+  static openIcon() {
+    shell.openExternal(iconUrl);
+  }
+
+  /**
    * Render the component.
    *
    * @returns {{}} the component
@@ -160,8 +172,15 @@ export default class About extends Reflux.Component {
               Slack team might have in place.  Use at your own risk.
             </p>
             <p style={{ fontSize: 'small' }}>
-              The program icon is based on TV by Jems Mayor from the Noun
-              Project under the terms of the
+              The program icon is based on
+              <a
+                draggable={false}
+                href="#"
+                onClick={About.openIcon}
+                style={{ marginLeft: '0.3em' }}
+              >
+                TV
+              </a> by Jems Mayor from the Noun Project under the terms of the
               <a
                 draggable={false}
                 href="#"
