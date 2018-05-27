@@ -6,17 +6,26 @@ While [Slack](https://slack.com/) is a reasonable messaging system, the "ransom"
 
 ## Install and Run
 
-Until I figure out how to package things reliably, it's a process.  You'll need to:
+Assuming the packaging worked...
+
+1. Head over to the [Releases](https://github.com/jcolag/SlackBackup/releases) page on GitHub.
+1. Download the version of _SlackBackup_ for your computer.
+1. Install _SlackBackup_ (exception:  If you're on Linux, you won't need to install an [AppImage](https://appimage.org/) package).
+1. Run!
+
+For the people who want to see debugging information or make changes to the system, there's a bit of a process.  You'll need to:
 
  1. Download or clone the repository (see the **Clone or download** button on [the GitHub page](https://github.com/jcolag/SlackBackup)).
  1. Install a recent version of [Node.js](https://nodejs.org/en/) for your machine.
  1. At a command prompt/shell (run `cmd` on Windows, for example)...
 
  > 1. Go to the folder/directory where you put the repository.
- > 1. Type `npm install` to get the requirement.  Note that this currently sometimes reports errors that appear to be ignorable.  One day, they'll get fixed...
+ > 1. Type `npm install` to get the requirement.  Note that this currently sometimes reports errors that appear to be ignorable, with no effect on the running program.  One day, they'll get fixed...
  > 1. Type `npm run start` and the window will pop up.
 
 And you should be ready to go!
+
+Note:  If you're packaging _SlackBackup_ for Windows, but are on Linux (`npm run package-all`), you'll need a current version of your distribution and Wine 1.8 or higher.  Previous versions of this file indicated a problem with packaging, which was using an older Linux distribution that didn't support current libraries.
 
 ## Usage
 
