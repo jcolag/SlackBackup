@@ -192,6 +192,7 @@
         "d3": "^5.1.0",
         "devtron": "^1.4.0",
         "electron-debug": "^1.5.0",
+        "flesch": "^1.0.2",
         "font-awesome": "^4.7.0",
         "fuse.js": "^3.2.0",
         "history": "^4.7.2",
@@ -213,7 +214,8 @@
         "sentiment": "^4.2.0",
         "slack": "^11.0.0",
         "source-map-support": "^0.5.3",
-        "stemmer": "^1.0.2"
+        "stemmer": "^1.0.2",
+        "syllable": "^3.0.0"
     },
     "devEngines": {
         "node": ">=7.x",
