@@ -206,20 +206,31 @@ export class VisualizationStore extends Reflux.Store {
         this.teams.push(info);
         const fileList = fs.readdirSync(dir);
         fileList.forEach(file => {
+          const fqname = path.join(folder, d, file);
+          if (file.startsWith('user-') && file.endsWith('.json')) {
+            const user = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
+            this.userMap[user.id] = user;
+          }
+        });
+        fileList.forEach(file => {
           if (!file.endsWith('.json')) {
             return;
           }
           const fqname = path.join(folder, d, file);
           if (file.startsWith('user-')) {
-            const user = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
-            this.userMap[user.id] = user;
+            // Already processed above.
           } else if (file !== '_localuser.json' && file !== 'im-slackbot.json') {
             // Already processed the user above and Slackbot/notes aren't good data
             const messages = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
+            const users = messages
+              .map(m => m.user)
+              .filter((v, i, a) => v !== info.user_id && a.indexOf(v) === i);
+            const otherUser = users.length === 1 ? this.userMap[users[0]] : null;
             for (let i = 0; i < messages.length; i += 1) {
               const message = messages[i];
               message.filename = fqname;
               message.local_user = info;
+              message.other_user = otherUser;
             }
             files.push(messages);
           }
