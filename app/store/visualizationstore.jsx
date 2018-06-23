@@ -7,9 +7,12 @@ const moment = require('moment');
 const path = require('path');
 const sentiment = require('sentiment');
 const stemmer = require('stemmer');
+const syllables = require('syllable');
+const flesch = require('flesch');
 
 export const VisualizationActions = Reflux.createActions({
   clearConversations: {},
+  determineReadability: { sync: false, children: ['completed'] },
   determineRelationships: { sync: false, children: ['completed'] },
   determineSentiment: { sync: false, children: ['completed'] },
   determineVocabulary: { sync: false, children: ['completed'] },
@@ -33,6 +36,7 @@ export class VisualizationStore extends Reflux.Store {
     this.state = {
       conversations: [],
       localUser: [],
+      readabilities: [],
       relationships: [],
       sentiments: [],
       wordList: [],
@@ -69,6 +73,7 @@ export class VisualizationStore extends Reflux.Store {
           sent.color = msg.user_info.color;
           sent.text = msg.text;
           sent.time = moment(msg.ts * 1000).format('dddd, ll, LT');
+          sent.to_user = msg.other_user ? msg.other_user : msg.user_info;
           sent.ts = Number(msg.ts);
           sent.value = ((normalized) => (normalized ? sent.comparative : sent.score));
           sentiments.push(sent);
@@ -186,6 +191,49 @@ export class VisualizationStore extends Reflux.Store {
     });
     this.setState({ wordList });
     VisualizationActions.determineVocabulary.completed();
+  }
+
+  /**
+   * Work out the readability data for the specified user.
+   *
+   * @param {(string | void)} user Slack user ID, defaulting to the token owner
+   * @returns {void} Nothing
+   * @memberof VisualizationStore
+   */
+  onDetermineReadability(user: string | void) {
+    let readabilities = [];
+    this.state.conversations.forEach(conversation => {
+      conversation.forEach(msg => {
+        if ((!user && msg.is_local_user) || (msg.user && msg.user === user)) {
+          const sentence = msg.text.split(/[.;:?!]+/).filter(s => s.length > 0).length;
+          const word = msg.text
+            .split(/[ `~!@#$%^&*()-=_+[\]{}\\|;:",./<>?\n\t]+/)
+            .filter(s => s.length > 0)
+            .length;
+          const syllable = syllables(msg.text);
+          const read = flesch({
+            sentence,
+            word,
+            syllable,
+          });
+          readabilities.push({
+            color: msg.user_info.color,
+            text: msg.text,
+            time: moment(msg.ts * 1000).format('dddd, ll, LT'),
+            to_user: msg.other_user ? msg.other_user : msg.user_info,
+            ts: Number(msg.ts),
+            value: read,
+          });
+        }
+      });
+    });
+    readabilities = readabilities.sort((a, b) => a.ts - b.ts);
+    while (readabilities[2].ts - readabilities[0].ts > 30 * 24 * 60 * 60) {
+      // If early messages are more than a month older than the rest, drop them
+      readabilities.shift();
+    }
+    this.setState({ readabilities });
+    VisualizationActions.determineReadability.completed();
   }
 
   /**
