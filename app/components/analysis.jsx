@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Reflux from 'reflux';
+import Readability from './visualization/readability';
 import Relationship from './visualization/relationship';
 import Sentiment from './visualization/sentiment';
 import Vocabulary from './visualization/vocabulary';
@@ -82,6 +83,18 @@ export default class Analysis extends Reflux.Component<Props> {
   }
 
   /**
+   * Show the readability visualization.
+   *
+   * @returns {void} Nothing
+   * @memberof Analysis
+   */
+  showReadability() {
+    this.setState({
+      whichVisualization: 4,
+    });
+  }
+
+  /**
    * Render the component.
    *
    * @returns {{}} the component
@@ -98,6 +111,9 @@ export default class Analysis extends Reflux.Component<Props> {
         break;
       case 3:
         vis = <Vocabulary />;
+        break;
+      case 4:
+        vis = <Readability />;
         break;
       default:
         vis = (
@@ -129,6 +145,16 @@ export default class Analysis extends Reflux.Component<Props> {
                   onClick={this.showSentiment.bind(this)}
                 >
                   Sentiment <span className="sr-only">(current)</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  draggable={false}
+                  href="#"
+                  onClick={this.showReadability.bind(this)}
+                >
+                  Readability
                 </a>
               </li>
               <li className="nav-item">
