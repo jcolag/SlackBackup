@@ -20,6 +20,7 @@ export const ConfigActions = Reflux.createActions({
   setNonmemberSave: {},
   setToken: {},
   setTokenIndex: {},
+  setUseUserColor: {},
 });
 
 /**
@@ -62,6 +63,9 @@ export class ConfigStore extends Reflux.Store {
       folder,
       folderMissing: !fs.existsSync(folder),
       isDirty: oldFile,
+      useUserColor: Object.prototype.hasOwnProperty.call(config, 'useUserColor')
+        ? config.useUserColor
+        : false,
       nonmemberSave: Object.prototype.hasOwnProperty.call(config, 'nonmemberSave')
         ? config.nonmemberSave
         : false,
@@ -241,6 +245,24 @@ export class ConfigStore extends Reflux.Store {
   }
 
   /**
+   * Changes which color set to use for analysis data points.
+   *
+   * @param {boolean} newState The new state
+   * @returns {void} nothing
+   * @memberof ConfigStore
+   */
+  onSetUseUserColor(newState: boolean) {
+    if (newState === this.state.useUserColor) {
+      return;
+    }
+
+    this.setState({
+      isDirty: true,
+      useUserColor: newState,
+    });
+  }
+
+  /**
      * Saves the current configuration.
      *
      * @returns {null} no return
@@ -255,6 +277,7 @@ export class ConfigStore extends Reflux.Store {
       folder: this.state.folder,
       nonmemberSave: this.state.nonmemberSave,
       tokens: this.state.tokens,
+      useUserColor: this.state.useUserColor,
     };
     fs.writeFileSync(filename, JSON.stringify(config, null, indentation));
     this.setState({ isDirty: false });
