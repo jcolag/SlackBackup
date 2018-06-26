@@ -86,6 +86,19 @@ export default class Configuration extends Reflux.Component<Props> {
   }
 
   /**
+   * Change the analysis color setting.
+   *
+   * @static
+   * @param {SyntheticInputEvent<HTMLInputElement>} event Input event
+   * @returns {void} Nothing
+   * @memberof Configuration
+   */
+  static updateUseUserColor(event: SyntheticMouseEvent<HTMLInputElement>) {
+    const { currentTarget } = event;
+    ConfigActions.setUseUserColor(currentTarget.checked);
+  }
+
+  /**
    * Change the number of days of files before recommending deletion.
    *
    * @static
@@ -425,6 +438,23 @@ export default class Configuration extends Reflux.Component<Props> {
               />
               <label htmlFor="comparesentiment" className="custom-control-label checkbox-label">
                 Use Comparative Sentiment
+              </label>
+            </div>
+          </div>
+          <div
+            className="col-md-6"
+            title="For data points in analysis, use the message recipients' colors (for direct messages), rather than this user's color"
+          >
+            <div className="custom-control custom-checkbox form-control">
+              <input
+                className="custom-control-input"
+                id="useusercolor"
+                type="checkbox"
+                checked={this.state.useUserColor}
+                onChange={Configuration.updateUseUserColor}
+              />
+              <label htmlFor="useusercolor" className="custom-control-label checkbox-label">
+                Use Recipient Users&rsquo; Colors
               </label>
             </div>
           </div>
