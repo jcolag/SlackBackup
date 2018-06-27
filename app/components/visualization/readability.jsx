@@ -108,7 +108,7 @@ export default class Readability extends Reflux.Component<Props> {
         } = readability;
         const score = readability.value;
         const user = readability.to_user;
-        const { color } = user;
+        const { color } = this.state.useUserColor ? user : readability;
         container
           .append('circle')
           .attr('cx', xScale(ts))
