@@ -100,9 +100,11 @@ export default class Sentiment extends Reflux.Component<Props> {
       .call(yAxis);
     this.state.sentiments.forEach(sentiment => {
       const {
-        color, text, time, ts
+        text, time, ts
       } = sentiment;
       const score = sentiment.value(normalize);
+      const user = sentiment.to_user;
+      const { color } = this.state.useUserColor ? user : sentiment;
       container
         .append('circle')
         .attr('cx', xScale(ts))
