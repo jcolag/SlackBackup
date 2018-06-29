@@ -112,7 +112,7 @@ export default class Sentiment extends Reflux.Component<Props> {
         .attr('r', 3)
         .style('fill', () => `#${color}`)
         .append('title')
-        .text(() => `${time}\nScore: ${score}\n${text}`);
+        .text(() => `${time}\nfor ${user.real_name}\nScore: ${score}\n${text}`);
     });
   }
 
