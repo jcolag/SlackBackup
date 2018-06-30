@@ -15,6 +15,7 @@ export const VisualizationActions = Reflux.createActions({
   determineReadability: { sync: false, children: ['completed'] },
   determineRelationships: { sync: false, children: ['completed'] },
   determineSentiment: { sync: false, children: ['completed'] },
+  determineTimes: { sync: false, children: ['completed'] },
   determineVocabulary: { sync: false, children: ['completed'] },
   loadConversations: { sync: false },
 });
@@ -39,6 +40,7 @@ export class VisualizationStore extends Reflux.Store {
       readabilities: [],
       relationships: [],
       sentiments: [],
+      times: [],
       wordList: [],
     };
     this.stores = [ConfigStore];
@@ -234,6 +236,45 @@ export class VisualizationStore extends Reflux.Store {
     }
     this.setState({ readabilities });
     VisualizationActions.determineReadability.completed();
+  }
+
+  /**
+   * Work out the times of each post.
+   *
+   * @param {(string | void)} user Slack user ID, defaulting to the token owner
+   * @returns {void} Nothing
+   * @memberof VisualizationStore
+   */
+  onDetermineTimes(user: string | void) {
+    const times = [];
+    const spd = 86400;
+    this.state.conversations.forEach(conversation => {
+      conversation.forEach(msg => {
+        if ((!user && msg.is_local_user) || (msg.user && msg.user === user)) {
+          const words = msg.text
+            .split(/[ `~!@#$%^&*()-=_+[\]{}\\|;:",./<>?\n\t]+/)
+            .filter(s => s.length > 0)
+            .length;
+          const ts = Number(msg.ts);
+          const day = Math.trunc(ts / spd) * spd;
+          times.push({
+            color: msg.user_info.color,
+            day,
+            text: msg.text,
+            time: ts - day,
+            to_user: msg.other_user ? msg.other_user : msg.user_info,
+            ts,
+            words,
+          });
+        }
+      });
+    });
+    times.sort((a, b) => a.ts - b.ts);
+    while (times[2].day - times[0].day >= 30 * spd) {
+      times.shift();
+    }
+    this.setState({ times });
+    VisualizationActions.determineTimes.completed();
   }
 
   /**
