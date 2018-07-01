@@ -4,6 +4,7 @@ import Reflux from 'reflux';
 import Readability from './visualization/readability';
 import Relationship from './visualization/relationship';
 import Sentiment from './visualization/sentiment';
+import TimeOfDay from './visualization/timeofday';
 import Vocabulary from './visualization/vocabulary';
 import { VisualizationStore } from '../store/visualizationstore';
 
@@ -95,6 +96,18 @@ export default class Analysis extends Reflux.Component<Props> {
   }
 
   /**
+   * Show the timing visualization.
+   *
+   * @returns {void} Nothing
+   * @memberof Analysis
+   */
+  showTiming() {
+    this.setState({
+      whichVisualization: 5,
+    });
+  }
+
+  /**
    * Render the component.
    *
    * @returns {{}} the component
@@ -114,6 +127,9 @@ export default class Analysis extends Reflux.Component<Props> {
         break;
       case 4:
         vis = <Readability />;
+        break;
+      case 5:
+        vis = <TimeOfDay />;
         break;
       default:
         vis = (
@@ -175,6 +191,16 @@ export default class Analysis extends Reflux.Component<Props> {
                   onClick={this.showVocabulary.bind(this)}
                 >
                   Vocabulary
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  draggable={false}
+                  href="#"
+                  onClick={this.showTiming.bind(this)}
+                >
+                  Timing
                 </a>
               </li>
             </ul>
