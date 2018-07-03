@@ -82,8 +82,10 @@ The search results work almost identically to the [Conversations](#conversations
 The **Analysis** item on the main menu currently allows for three visualizations of the downloaded data.
 
 * *Sentiment* shows a "relative happiness ranking" for each of your messages archived.  It uses the [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) list via [a third-party library](https://github.com/thisandagain/sentiment) to guess at the intent behind the message.  Note that it doesn't understand sarcasm, so...
+* *Readability* shows the [Flesch reading ease](https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests) for each message.  Note that the readability test was designed primarily for extended texts, so some odd data points will appear, especially one-word posts where the word happens to be large.  That is, merely saying "incredible" will show as being very difficult to read.
 * *Relationships* isn't perfect, but attempts to give a sense of who you deal with the most.  The dots are sized to how much that person posts where you read and should be approximately at a distance representing how often you send messages to where they read.
 * *Vocabulary* likewise isn't perfect, but strips out [stop words](https://en.wikipedia.org/wiki/Stop_words) and finds the [stem](https://en.wikipedia.org/wiki/Stemming) of each word you use to give a sense of what words you use most, subject to what will fit reasonably on the screen.
+* *Timing* simply shows the posts (with relative sizes) based on the day it was posted (left to right) and the time of day it was posted (bottom to top), making it possible to see trends and exceptions over time.
 
 ## Contribution
 
