@@ -375,13 +375,14 @@ export const StopWords = [
   'an',
   'and',
   'another',
-  'any',
+  'ani', // any
+  'anybodi', // anybody
   'anyhow',
   'anyone',
-  'anything',
+  'anythi', // anything
   'anyway',
   'anywhere',
-  'are',
+  'ar', // are
   'around',
   'as',
   'at',
@@ -393,7 +394,7 @@ export const StopWords = [
   'becomes',
   'becoming',
   'been',
-  'before',
+  'befor', // before
   'beforehand',
   'behind',
   'being',
@@ -503,7 +504,7 @@ export const StopWords = [
   'ltd',
   'made',
   'many',
-  'may',
+  'mai', // may
   'me',
   'meanwhile',
   'might',
@@ -538,9 +539,9 @@ export const StopWords = [
   'off',
   'often',
   'on',
-  'once',
+  'onc', // once
   'one',
-  'only',
+  'onli', // only
   'onto',
   'or',
   'other',
@@ -578,7 +579,7 @@ export const StopWords = [
   'so',
   'some',
   'somehow',
-  'someone',
+  'someon', // someone
   'something',
   'sometime',
   'sometimes',
@@ -603,11 +604,11 @@ export const StopWords = [
   'therein',
   'thereupon',
   'these',
-  'they',
+  'thei', // their
   'thickv',
   'thin',
   'third',
-  'this',
+  'thi', // this
   'those',
   'though',
   'three',
@@ -630,14 +631,14 @@ export const StopWords = [
   'up',
   'upon',
   'us',
-  'very',
+  'veri', // very
   'via',
-  'was',
+  'wa', // was
   'we',
   'well',
   'were',
   'what',
-  'whatever',
+  'whatev', // whatever
   'when',
   'whence',
   'whenever',
