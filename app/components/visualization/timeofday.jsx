@@ -63,9 +63,9 @@ export default class TimeOfDay extends Reflux.Component<Props> {
     const { clientHeight, clientWidth } = container._groups[0][0];
     const ctz = new Date().getTimezoneOffset();
     let minTime = Number.MAX_VALUE;
-    let maxTime = Number.MIN_VALUE;
+    let maxTime = -Number.MAX_VALUE;
     let minDay = Number.MAX_VALUE;
-    let maxDay = Number.MIN_VALUE;
+    let maxDay = -Number.MAX_VALUE;
     this.state.times.forEach(time => {
       if (time.day < minDay) {
         minDay = time.day;

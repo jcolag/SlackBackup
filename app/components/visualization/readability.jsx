@@ -61,9 +61,9 @@ export default class Readability extends Reflux.Component<Props> {
     const container = d3.select(this.readability);
     const { clientHeight, clientWidth } = container._groups[0][0];
     let minTs = Number.MAX_VALUE;
-    let maxTs = Number.MIN_VALUE;
+    let maxTs = -Number.MAX_VALUE;
     let minScore = Number.MAX_VALUE;
-    let maxScore = Number.MIN_VALUE;
+    let maxScore = -Number.MAX_VALUE;
     this.state.readabilities.forEach(readability => {
       if (readability.ts < minTs) {
         minTs = readability.ts;
