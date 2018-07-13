@@ -168,6 +168,51 @@ export class VisualizationStore extends Reflux.Store {
         if ((!user && msg.is_local_user) || (msg.user && msg.user === user)) {
           const words = msg.text.split(/[ `~!@#$%^&*()-=_+[\]{}\\|;:",./<>?\n\t]/);
           for (let i = 0; i < words.length; i += 1) {
+            switch (words[i].toLowerCase()) {
+              case 'i\'m': {
+                words[i] = 'I';
+                words.push('am');
+                break;
+              }
+              case 'i\'d': {
+                words[i] = 'I';
+                words.push('would');
+                break;
+              }
+              case 'i\'ll': {
+                words[i] = 'I';
+                words.push('will');
+                break;
+              }
+              case 'you\'re': {
+                words[i] = 'you';
+                words.push('are');
+                break;
+              }
+              case 'won\'t': {
+                words[i] = 'will';
+                words.push('not');
+                break;
+              }
+              case 'can\'t': {
+                words[i] = 'can';
+                words.push('not');
+                break;
+              }
+              default: {
+                break;
+              }
+            }
+            if (words[i].toLowerCase().endsWith('n\'t')) {
+              words[i] = words[i].toLowerCase().substr(0, words[i].length - 3);
+              words.push('not');
+            } else if (words[i].toLowerCase().endsWith('\'ve')) {
+              words[i] = words[i].toLowerCase().substr(0, words[i].length - 3);
+              words.push('have');
+            } else if (words[i].toLowerCase().endsWith('\'d')) {
+              words[i] = words[i].toLowerCase().substr(0, words[i].length - 2);
+              words.push('would');
+            }
             let stem = stemmer(words[i]);
             while (stem.endsWith('\'')) {
               stem = stem.substr(0, stem.length - 1);
