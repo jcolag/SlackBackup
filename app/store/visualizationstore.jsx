@@ -397,21 +397,20 @@ export const StopWords = [
   '',
   'a',
   'about',
-  'above',
-  'above',
+  'abov', // above
   'across',
   'after',
-  'afterwards',
+  'afterward', // afterwards
   'again',
   'against',
   'all',
   'almost',
-  'alone',
+  'alon', // alone
   'along',
-  'already',
+  'alreadi', // already
   'also',
   'although',
-  'always',
+  'alwai', // always
   'am',
   'among',
   'amongst',
@@ -419,33 +418,29 @@ export const StopWords = [
   'amount',
   'an',
   'and',
-  'another',
+  'anoth', // another
   'ani', // any
   'anybodi', // anybody
   'anyhow',
-  'anyone',
+  'anyon', // anyone
   'anythi', // anything
-  'anyway',
-  'anywhere',
+  'anywai', // anyway
+  'anywher', // anywhere
   'ar', // are
   'around',
   'as',
   'at',
   'back',
-  'be',
-  'became',
-  'because',
-  'become',
-  'becomes',
-  'becoming',
+  'be', // be, being
+  'becam', // becane
+  'becaus', // because
+  'becom', // become, becomes, becoming
   'been',
   'befor', // before
   'beforehand',
   'behind',
-  'being',
   'below',
-  'beside',
-  'besides',
+  'besid', // beside, besides
   'between',
   'beyond',
   'bill',
@@ -463,33 +458,33 @@ export const StopWords = [
   'couldnt',
   'cry',
   'de',
-  'describe',
+  'describ', // describe
   'detail',
   'do',
   'done',
   'down',
   'due',
-  'during',
+  'dure', // during
   'each',
   'eg',
   'eight',
   'either',
   'eleven',
-  'else',
-  'elsewhere',
-  'empty',
+  'els', // else
+  'elsewher', // elsewhere
+  'empti', // empty
   'enough',
   'etc',
   'even',
   'ever',
-  'every',
-  'everyone',
-  'everything',
-  'everywhere',
+  'everi', // every
+  'everyon', // everyone
+  'everyth', // everything
+  'everywher', // everywhere
   'except',
   'few',
   'fifteen',
-  'fify',
+  'fifti', // fifty
   'fill',
   'find',
   'fire',
@@ -497,8 +492,8 @@ export const StopWords = [
   'five',
   'for',
   'former',
-  'formerly',
-  'forty',
+  'formerli', // formerly
+  'forti', // forti
   'found',
   'four',
   'from',
@@ -509,126 +504,116 @@ export const StopWords = [
   'give',
   'go',
   'had',
-  'has',
+  'ha', //  has
   'hasnt',
   'have',
   'he',
-  'hence',
-  'her',
-  'here',
-  'hereafter',
-  'hereby',
+  'henc', // hence
+  'her', // her, here, hers
+  'hereaft', // hereafter
+  'herebi', // hereby
   'herein',
   'hereupon',
-  'hers',
   'herself',
   'him',
   'himself',
-  'his',
+  'hi', // his
   'how',
-  'however',
-  'hundred',
+  'howev', // however
+  'http',
+  'hundr', // hundred
   'i',
   'ie',
   'if',
   'in',
   'inc',
-  'indeed',
+  'inde', // indeed
   'interest',
   'into',
   'is',
-  'it',
-  'its',
+  'it', // it, its
   'itself',
   'keep',
   'last',
   'latter',
-  'latterly',
+  'latterli', // latterly
   'least',
   'less',
   'ltd',
   'made',
-  'many',
+  'mani', // many
   'mai', // may
   'me',
-  'meanwhile',
+  'meanwhil', // meanwhile
   'might',
   'mill',
   'mine',
   'more',
-  'moreover',
+  'moreov', // moreover
   'most',
-  'mostly',
+  'mostli', // mostly
   'move',
   'much',
   'must',
   'my',
   'myself',
-  'name',
-  'namely',
+  'name', // name, namely
   'neither',
   'never',
   'nevertheless',
   'next',
   'nine',
   'no',
-  'nobody',
+  'nobodi', // nobody
   'none',
-  'noone',
+  'noon', // noone
   'nor',
   'not',
-  'nothing',
+  'noth', // nothing
   'now',
-  'nowhere',
+  'nowher', // nowhere
   'of',
   'off',
   'often',
-  'on',
+  'on', // on, one
   'onc', // once
-  'one',
   'onli', // only
   'onto',
   'or',
-  'other',
-  'others',
-  'otherwise',
-  'our',
-  'ours',
-  'ourselves',
+  'other', // other, others
+  'otherwis', // otherwise
+  'our', // our, ours
+  'ourselv', // ourselves
   'out',
   'over',
   'own',
   'part',
   'per',
-  'perhaps',
-  'please',
+  'perhap', // perhaps
+  'pleas', // pleas
   'put',
   'rather',
   're',
   'same',
   'see',
-  'seem',
-  'seemed',
-  'seeming',
-  'seems',
-  'serious',
-  'several',
+  'seem', // seem, seemed, seeming, seems
+  'seriou', // serious
+  'sever', // several
   'she',
   'should',
   'show',
   'side',
-  'since',
-  'sincere',
+  'sinc', // since
+  'sincer', // sincere
   'six',
-  'sixty',
+  'sixti', // sixty
   'so',
   'some',
   'somehow',
   'someon', // someone
-  'something',
-  'sometime',
-  'sometimes',
-  'somewhere',
+  'someth', // something
+  'sometim', // sometime, sometimes
+  'somewher', // somewhere
   'still',
   'such',
   'system',
@@ -639,13 +624,13 @@ export const StopWords = [
   'the',
   'their',
   'them',
-  'themselves',
+  'themselv', // themselves
   'then',
-  'thence',
+  'thenc', // thence
   'there',
-  'thereafter',
-  'thereby',
-  'therefore',
+  'thereaft', // thereafter
+  'therebi', // thereby
+  'therefor', // therefore
   'therein',
   'thereupon',
   'these',
@@ -660,15 +645,14 @@ export const StopWords = [
   'through',
   'throughout',
   'thru',
-  'thus',
+  'thu', // thus
   'to',
-  'together',
+  'togeth', // together
   'too',
   'top',
-  'toward',
-  'towards',
-  'twelve',
-  'twenty',
+  'toward', // toward, towards
+  'twelv', // twelve
+  'twenti', // twenty
   'two',
   'un',
   'under',
@@ -685,15 +669,15 @@ export const StopWords = [
   'what',
   'whatev', // whatever
   'when',
-  'whence',
-  'whenever',
+  'whenc', // whence
+  'whenev', // whenever
   'where',
-  'whereafter',
-  'whereas',
-  'whereby',
+  'whereaft', // whereafter
+  'wherea', // whereas
+  'wherebi', // whereby
   'wherein',
   'whereupon',
-  'wherever',
+  'wherev', // wherever
   'whether',
   'which',
   'while',
@@ -711,9 +695,7 @@ export const StopWords = [
   'would',
   'yet',
   'you',
-  'your',
-  'yours',
+  'your', // your, yours
   'yourself',
-  'yourselves',
-  'the'
+  'yourselv', // yourselves
 ];
