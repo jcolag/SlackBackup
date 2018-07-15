@@ -13,6 +13,8 @@ Assuming the packaging worked...
 1. Install _SlackBackup_ (exception:  If you're on Linux, you won't need to install an [AppImage](https://appimage.org/) package).
 1. Run!
 
+Please note that there is a nuisance bug where the checkboxes (displayed by [Bootswatch](https://bootswatch.com/), for those who care) are oddly offset to cover the label text.  This only affects the installable versions, not development, making this somewhat difficult to figure out.
+
 For the people who want to see debugging information or make changes to the system, there's a bit of a process.  You'll need to:
 
  1. Download or clone the repository (see the **Clone or download** button on [the GitHub page](https://github.com/jcolag/SlackBackup)).
