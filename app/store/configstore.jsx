@@ -84,7 +84,7 @@ export class ConfigStore extends Reflux.Store {
      * @returns {null} no return
      * @memberof ConfigStore
      */
-  onSetToken(newToken: { name: string, token: string }) {
+  onSetToken(newToken: { name: string, value: string }) {
     if (newToken === this.state.tokens[this.state.whichToken]) {
       return;
     }
