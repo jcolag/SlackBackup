@@ -107,8 +107,8 @@ export class VisualizationStore extends Reflux.Store {
     for (let i = 0; i < users.length; i += 1) {
       relationshipsIn.push(0);
       relationshipsOut.push(0);
-      userColors.push('#999999');
       userNames.push('Unknown User');
+      userColors.push('999999');
     }
     this.state.conversations.filter(c => c.length > 0).forEach(conversation => {
       const who = {};
@@ -116,7 +116,7 @@ export class VisualizationStore extends Reflux.Store {
       const isDirect = conversation[0].filename.indexOf(`${path.sep}im-`) > 0;
       conversation.forEach(msg => {
         const index = users.indexOf(msg.user);
-        if (userColors[index] === '#999999') {
+        if (userColors[index] === '999999') {
           userColors[index] = msg.user_info.color;
           userNames[index] = msg.user_info.real_name;
         }
