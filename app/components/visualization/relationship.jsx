@@ -83,7 +83,7 @@ export default class Relationship extends Reflux.Component<Props> {
         nodes.push({
           color: `#${rel.color}`,
           in: rel.in,
-          name: rel.name,
+          name: `${rel.name} (${rel.team})`,
           out: rel.out,
           r: Math.log(rel.in) + 2,
           stroke: `#${rel.color}`,

@@ -107,8 +107,12 @@ export class VisualizationStore extends Reflux.Store {
     for (let i = 0; i < users.length; i += 1) {
       relationshipsIn.push(0);
       relationshipsOut.push(0);
-      userNames.push('Unknown User');
       userColors.push('999999');
+      userNames.push({
+        deleted: true,
+        name: 'Unknown User',
+        team: 'Unknown Team',
+      });
     }
     this.state.conversations.filter(c => c.length > 0).forEach(conversation => {
       const who = {};
@@ -118,7 +122,11 @@ export class VisualizationStore extends Reflux.Store {
         const index = users.indexOf(msg.user);
         if (userColors[index] === '999999') {
           userColors[index] = msg.user_info.color;
-          userNames[index] = msg.user_info.real_name;
+          userNames[index] = {
+            deleted: msg.user_info.deleted,
+            name: msg.user_info.real_name,
+            team: msg.local_user.team,
+          };
         }
         if (!who[msg.user]) {
           who[msg.user] = 0;
@@ -144,9 +152,11 @@ export class VisualizationStore extends Reflux.Store {
     for (let i = 0; i < users.length; i += 1) {
       relationships.push({
         color: userColors[i],
+        deleted: userNames[i].deleted,
         in: relationshipsIn[i],
-        name: userNames[i],
+        name: userNames[i].name,
         out: relationshipsOut[i],
+        team: userNames[i].team,
       });
     }
     this.setState({ relationships });
