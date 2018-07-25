@@ -64,7 +64,7 @@ export default class Relationship extends Reflux.Component<Props> {
   drawRelationships() {
     const container = d3.select(this.relationships);
     const { clientHeight, clientWidth } = container._groups[0][0];
-    const maxDist = Math.min(clientHeight, clientWidth);
+    const maxDist = Math.min(clientHeight / 2, clientWidth / 2);
     const { links, nodes } = this.state;
     let maxScore = 0;
     if (links.length === 0) {
