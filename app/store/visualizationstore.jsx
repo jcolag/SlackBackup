@@ -73,6 +73,7 @@ export class VisualizationStore extends Reflux.Store {
         if ((!user && msg.is_local_user) || (msg.user && msg.user === user)) {
           const sent = sentiment(msg.text);
           sent.color = msg.user_info.color;
+          sent.filename = msg.filename;
           sent.text = msg.text;
           sent.time = moment(msg.ts * 1000).format('dddd, ll, LT');
           sent.to_user = msg.other_user ? msg.other_user : msg.user_info;
@@ -110,6 +111,7 @@ export class VisualizationStore extends Reflux.Store {
       userColors.push('999999');
       userNames.push({
         deleted: true,
+        file: '',
         name: 'Unknown User',
         team: 'Unknown Team',
       });
@@ -124,9 +126,12 @@ export class VisualizationStore extends Reflux.Store {
           userColors[index] = msg.user_info.color;
           userNames[index] = {
             deleted: msg.user_info.deleted,
+            file: conversation[0].filename,
             name: msg.user_info.real_name,
             team: msg.local_user.team,
           };
+        } else if (isDirect) {
+          userNames[index].file = conversation[0].filename;
         }
         if (!who[msg.user]) {
           who[msg.user] = 0;
@@ -137,7 +142,7 @@ export class VisualizationStore extends Reflux.Store {
         return;
       }
       Object.getOwnPropertyNames(who).forEach(user => {
-        const weight = isDirect ? 1 : 0.5;
+        const weight = isDirect ? 1 : 0.25;
         if (user === local) {
           Object.getOwnPropertyNames(who).forEach(w => {
             relationshipsOut[users.indexOf(w)] += who[user] * weight;
@@ -153,6 +158,7 @@ export class VisualizationStore extends Reflux.Store {
       relationships.push({
         color: userColors[i],
         deleted: userNames[i].deleted,
+        file: userNames[i].file,
         in: relationshipsIn[i],
         name: userNames[i].name,
         out: relationshipsOut[i],
@@ -275,6 +281,7 @@ export class VisualizationStore extends Reflux.Store {
           });
           readabilities.push({
             color: msg.user_info.color,
+            file: conversation[0].filename,
             text: msg.text,
             time: moment(msg.ts * 1000).format('dddd, ll, LT'),
             to_user: msg.other_user ? msg.other_user : msg.user_info,
@@ -315,6 +322,7 @@ export class VisualizationStore extends Reflux.Store {
           times.push({
             color: msg.user_info.color,
             day,
+            file: msg.filename,
             text: msg.text,
             time: ts - day,
             to_user: msg.other_user ? msg.other_user : msg.user_info,
