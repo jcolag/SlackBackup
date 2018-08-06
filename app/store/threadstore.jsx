@@ -101,15 +101,18 @@ export class ThreadStore extends Reflux.Store {
    * Select or de-select a message.
    *
    * @param {number} ts The message timestamp
+   * @param {bool} scroll Whether to scroll to the selected message
    * @returns {void} Nothing
    * @memberof ThreadStore
    */
-  onToggleSelection(ts: number) {
+  onToggleSelection(ts: number, scroll: boolean = false) {
     const { thread } = this.state;
+    const doScroll = scroll === null ? false : scroll;
     for (let i = 0; i < thread.length; i += 1) {
       const message = thread[i];
       if (Number(message.ts) === ts) {
         message.is_selected = !message.is_selected;
+        message.scroll_to = doScroll && message.is_selected;
       }
     }
     this.setState({ thread });

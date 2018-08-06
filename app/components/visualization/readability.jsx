@@ -2,9 +2,13 @@
 import React from 'react';
 import Reflux from 'reflux';
 import { ConfigStore } from '../../store/configstore';
+import { SearchActions } from '../../store/searchstore';
+import { ThreadActions } from '../../store/threadstore';
+import { UiActions } from '../../store/uistore';
 import { VisualizationActions, VisualizationStore } from '../../store/visualizationstore';
 
 const d3 = require('d3');
+const path = require('path');
 
 type Props = {
 };
@@ -114,6 +118,19 @@ export default class Readability extends Reflux.Component<Props> {
           .attr('cx', xScale(ts))
           .attr('cy', yScale(Number.isNaN(score) ? maxScore : score))
           .attr('r', Math.log(readability.text.split(/\s+/).length) + 1)
+          .on('click', () => {
+            const { file } = readability;
+            const datats = readability.ts;
+            const pathParts = file.split(path.sep);
+            UiActions.setScreen(5);
+            UiActions.changeGutter(0);
+            SearchActions.highlightThread(file);
+            ThreadActions.loadFile(
+              pathParts[pathParts.length - 2],
+              pathParts[pathParts.length - 1]
+            );
+            ThreadActions.toggleSelection(datats, true);
+          })
           .style('fill', () => `#${color}`)
           .append('title')
           .text(() => `${time}\nfor ${user.real_name}\nScore: ${score}\n${Readability.explainScore(score)}\n\n${text}`);

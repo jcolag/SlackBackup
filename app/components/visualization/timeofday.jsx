@@ -3,9 +3,13 @@ import React from 'react';
 import Reflux from 'reflux';
 import moment from 'moment';
 import { ConfigStore } from '../../store/configstore';
+import { SearchActions } from '../../store/searchstore';
+import { ThreadActions } from '../../store/threadstore';
+import { UiActions } from '../../store/uistore';
 import { VisualizationActions, VisualizationStore } from '../../store/visualizationstore';
 
 const d3 = require('d3');
+const path = require('path');
 
 type Props = {
 };
@@ -114,6 +118,19 @@ export default class TimeOfDay extends Reflux.Component<Props> {
         .attr('cy', yScale((time - (tz * 60)) / 3600))
         .attr('r', Math.log2(words + 1))
         .style('fill', () => `#${color}`)
+        .on('click', () => {
+          const { file } = tod;
+          const datats = tod.ts;
+          const pathParts = file.split(path.sep);
+          UiActions.setScreen(5);
+          UiActions.changeGutter(0);
+          SearchActions.highlightThread(file);
+          ThreadActions.loadFile(
+            pathParts[pathParts.length - 2],
+            pathParts[pathParts.length - 1]
+          );
+          ThreadActions.toggleSelection(datats, true);
+        })
         .append('title')
         .text(() => `${moment(ts * 1000).format('dddd, MMMM Do YYYY, h:mm:ss a')}\nfor ${user.real_name}\n${text}`);
     });
