@@ -1,9 +1,13 @@
 // @flow
 import React from 'react';
 import Reflux from 'reflux';
+import { SearchActions } from '../../store/searchstore';
+import { ThreadActions } from '../../store/threadstore';
+import { UiActions } from '../../store/uistore';
 import { VisualizationActions, VisualizationStore } from '../../store/visualizationstore';
 
 const d3 = require('d3');
+const path = require('path');
 
 type Props = {
 };
@@ -56,6 +60,25 @@ export default class Relationship extends Reflux.Component<Props> {
   }
 
   /**
+   * Handles the clicking of user objects in the visualization.
+   *
+   * @param {({ name: string, team: string } | null)} user The user object
+   * @returns {void} Nothing
+   * @memberof Relationship
+   */
+  static handleUserClick(user: { file: string, name: string, team: string } | null) {
+    if (user === null) {
+      return;
+    }
+    const { file } = user;
+    const pathParts = file.split(path.sep);
+    UiActions.setScreen(5);
+    UiActions.changeGutter(0);
+    SearchActions.highlightThread(file);
+    ThreadActions.loadFile(pathParts[pathParts.length - 2], pathParts[pathParts.length - 1]);
+  }
+
+  /**
    * Draw the relationships in a force-directed graph.
    *
    * @returns {void} Nothing
@@ -73,6 +96,7 @@ export default class Relationship extends Reflux.Component<Props> {
         name: 'You',
         r: 15,
         stroke: `#${this.state.localUser[this.state.localUser.length - 1].user.color}`,
+        user: null,
         x: clientWidth / 2,
         y: clientHeight / 2,
       });
@@ -87,6 +111,7 @@ export default class Relationship extends Reflux.Component<Props> {
           out: rel.out,
           r: Math.log(rel.in) + 2,
           stroke: `#${rel.color}`,
+          user: rel,
           x: Math.random() * clientWidth,
           y: Math.random() * clientHeight,
         });
@@ -149,6 +174,7 @@ export default class Relationship extends Reflux.Component<Props> {
             cy={node.y}
             fill={node.color}
             key={`node-${node.x}-${node.y}`}
+            onClick={Relationship.handleUserClick.bind(this, node.user)}
             stroke={node.stroke}
             strokeWidth="2"
           >
