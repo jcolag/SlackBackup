@@ -28,12 +28,6 @@ a:hover {
     margin-left: 0.75em;
 }
 
-label::before,
-label::after {
-    left: 0.75em !important;
-    top: 0.6em !important;
-}
-
 .close:hover,
 .close:focus {
     color: #eee !important;
