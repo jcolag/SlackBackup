@@ -75,6 +75,15 @@ export class SearchStore extends Reflux.Store {
       const frags = baseName.split('-');
       const fileType = frags.shift();
       const displayName = frags.join(' ');
+      let user = null;
+      if (filename.indexOf('/im-') > 0) {
+        const matches = Object.values(this.userMap)
+          .filter(u => u.real_name === displayName && u.team_id === teamInfo.team_id)
+          .sort((a, b) => a.updated - b.updated);
+        if (matches.length > 0) {
+          [user] = matches;
+        }
+      }
       return {
         displayName,
         file,
@@ -83,6 +92,7 @@ export class SearchStore extends Reflux.Store {
         path: filename,
         team,
         teamInfo,
+        user,
       };
     }, this);
     this.setState({ searchFiles });

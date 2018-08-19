@@ -85,8 +85,10 @@ export default class ThreadList extends Reflux.Component<Props> {
             padding: '0.5em',
             width: '100%',
           };
+          const dot = conv.user ? <span style={{ color: `#${conv.user.color}` }}>&#x25c9;</span> : null;
           result.push(
             <label htmlFor={`cb${conv.path}`} key={conv.path} style={style}>
+              {dot}&nbsp;
               {conv.displayName}
               <input
                 checked={conv.is_selected}
