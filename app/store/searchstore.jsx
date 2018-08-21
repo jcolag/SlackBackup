@@ -76,7 +76,7 @@ export class SearchStore extends Reflux.Store {
       const fileType = frags.shift();
       const displayName = frags.join(' ');
       let user = null;
-      if (filename.indexOf('/im-') > 0) {
+      if (filename.indexOf(`${path.sep}im-`) > 0) {
         const matches = Object.values(this.userMap)
           .filter(u => u.real_name === displayName && u.team_id === teamInfo.team_id)
           .sort((a, b) => a.updated - b.updated);
