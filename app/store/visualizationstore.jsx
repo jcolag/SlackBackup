@@ -310,6 +310,7 @@ export class VisualizationStore extends Reflux.Store {
   onDetermineTimes(user: string | void) {
     const times = [];
     const spd = 86400;
+    const ctz = new Date().getTimezoneOffset();
     this.state.conversations.forEach(conversation => {
       conversation.forEach(msg => {
         if ((!user && msg.is_local_user) || (msg.user && msg.user === user)) {
@@ -317,16 +318,16 @@ export class VisualizationStore extends Reflux.Store {
             .split(/[ `~!@#$%^&*()-=_+[\]{}\\|;:",./<>?\n\t]+/)
             .filter(s => s.length > 0)
             .length;
-          const ts = Number(msg.ts);
+          const ts = Number(msg.ts) - (ctz * 60);
           const day = Math.trunc(ts / spd) * spd;
           times.push({
             color: msg.user_info.color,
             day,
             file: msg.filename,
             text: msg.text,
-            time: ts - day,
+            time: (ts + (ctz * 60)) - day,
             to_user: msg.other_user ? msg.other_user : msg.user_info,
-            ts,
+            ts: ts + (ctz * 60),
             words,
           });
         }
