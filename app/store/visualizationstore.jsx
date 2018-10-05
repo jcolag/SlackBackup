@@ -163,6 +163,7 @@ export class VisualizationStore extends Reflux.Store {
         name: userNames[i].name,
         out: relationshipsOut[i],
         team: userNames[i].team,
+        teamColor: VisualizationStore.colorFromString(userNames[i].team),
       });
     }
     this.setState({ relationships });
@@ -408,6 +409,28 @@ export class VisualizationStore extends Reflux.Store {
       localUser: this.teams,
       conversations: files,
     });
+  }
+
+  /**
+   * Creates a consistently arbitrary RGB color code from a string.
+   *
+   * @param {string} s Input string
+   * @returns {string} The color in RGB form
+   * @memberof VisualizationStore
+   */
+  static colorFromString(s: string) {
+    let hash = 0;
+    let chr;
+    if (s === 0) return hash;
+    for (let i = 0; i < s.length; i += 1) {
+      chr = s.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr; // eslint-disable-line no-bitwise
+      hash |= 0; // eslint-disable-line no-bitwise
+    }
+    hash &= 0xFFFFFF; // eslint-disable-line no-bitwise
+    let asHexString = (hash).toString(16);
+    asHexString = `00000${asHexString}`.slice(-6);
+    return `#${asHexString}`;
   }
 }
 
