@@ -110,7 +110,7 @@ export default class Relationship extends Reflux.Component<Props> {
           name: `${rel.name} (${rel.team})`,
           out: rel.out,
           r: Math.log(rel.in) + 2,
-          stroke: `#${rel.color}`,
+          stroke: rel.teamColor,
           user: rel,
           x: Math.random() * clientWidth,
           y: Math.random() * clientHeight,
