@@ -79,6 +79,10 @@ export class VisualizationStore extends Reflux.Store {
           sent.to_user = msg.other_user ? msg.other_user : msg.user_info;
           sent.ts = Number(msg.ts);
           sent.value = ((normalized) => (normalized ? sent.comparative : sent.score));
+          sent.words = msg.text
+            .split(/[ `~!@#$%^&*()-=_+[\]{}\\|;:",./<>?\n\t]+/)
+            .filter(s => s.length > 0)
+            .length;
           sentiments.push(sent);
         }
       });
