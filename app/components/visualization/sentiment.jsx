@@ -102,9 +102,9 @@ export default class Sentiment extends Reflux.Component<Props> {
     container.append('g')
       .attr('transform', 'translate(25,0)')
       .call(yAxis);
-    this.state.sentiments.forEach(sentiment => {
+    this.state.sentiments.sort((a, b) => b.words - a.words).forEach(sentiment => {
       const {
-        text, time, ts
+        text, time, ts, words
       } = sentiment;
       const score = sentiment.value(normalize);
       const user = sentiment.to_user;
@@ -113,7 +113,7 @@ export default class Sentiment extends Reflux.Component<Props> {
         .append('circle')
         .attr('cx', xScale(ts))
         .attr('cy', yScale(score))
-        .attr('r', 3)
+        .attr('r', Math.log2(words + 1) + 1)
         .on('click', () => {
           const { filename } = sentiment;
           const datats = sentiment.ts;
