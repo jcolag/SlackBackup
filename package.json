@@ -82,7 +82,7 @@
         "email": "jcolag@colagioia.net",
         "url": "https://github.com/jcolag"
     },
-    "license": "GPLv3",
+    "license": "GPL-3.0-or-later",
     "bugs": {
         "url": "https://github.com/jcolag/SlackBackup"
     },
@@ -193,6 +193,10 @@
         "devtron": "^1.4.0",
         "electron-debug": "^1.5.0",
         "flesch": "^1.0.3",
+        "fluent": "^0.9.1",
+        "fluent-intl-polyfill": "^0.1.0",
+        "fluent-langneg": "^0.1.0",
+        "fluent-react": "^0.8.2",
         "font-awesome": "^4.7.0",
         "fuse.js": "^3.3.0",
         "history": "^4.7.2",
