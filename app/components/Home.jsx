@@ -1,4 +1,5 @@
 // @flow
+import { LocalizationProvider } from 'fluent-react/compat';
 import React from 'react';
 import Reflux from 'reflux';
 import ReactModal from 'react-modal';
@@ -9,6 +10,7 @@ import Analysis from './analysis';
 import Configuration from './configuration';
 import Files from './files';
 import Footer from './footer';
+import { generateBundles } from '../l10n';
 import ListSelect from './listselect';
 import Nav from './nav';
 import SearchResults from './searchresults';
@@ -106,39 +108,41 @@ export default class Home extends Reflux.Component<Props> {
         break;
     }
     return (
-      <div style={{ height: '100vh' }}>
-        <Nav />
-        <div className={styles.container} style={{ width: '100%' }} data-tid="container">
-          <div className="row col-md-12" style={{ left: '2.5em' }}>
-            <div className={gutterClass} />
-            <div className={contentClass}>
-              <ReactCSSTransitionReplace
-                transitionName="fade-wait"
-                transitionEnterTimeout={1000}
-                transitionLeaveTimeout={1000}
-              >
-                {currentPage}
-              </ReactCSSTransitionReplace>
+      <LocalizationProvider bundles={generateBundles(navigator.languages, this.state.language)}>
+        <div style={{ height: '100vh' }}>
+          <Nav />
+          <div className={styles.container} style={{ width: '100%' }} data-tid="container">
+            <div className="row col-md-12" style={{ left: '2.5em' }}>
+              <div className={gutterClass} />
+              <div className={contentClass}>
+                <ReactCSSTransitionReplace
+                  transitionName="fade-wait"
+                  transitionEnterTimeout={1000}
+                  transitionLeaveTimeout={1000}
+                >
+                  {currentPage}
+                </ReactCSSTransitionReplace>
+              </div>
+              <div className={gutterClass} />
             </div>
-            <div className={gutterClass} />
+            <Footer />
           </div>
-          <Footer />
+          <ReactModal
+            closeTimeoutMS={500}
+            contentLabel="About Slack Backup"
+            isOpen={this.state.aboutVisible}
+            shouldCloseOnEsc
+            style={{
+              content: {
+                left: '15%',
+                width: '70%'
+              }
+            }}
+          >
+            <About />
+          </ReactModal>
         </div>
-        <ReactModal
-          closeTimeoutMS={500}
-          contentLabel="About Slack Backup"
-          isOpen={this.state.aboutVisible}
-          shouldCloseOnEsc
-          style={{
-            content: {
-              left: '15%',
-              width: '70%'
-            }
-          }}
-        >
-          <About />
-        </ReactModal>
-      </div>
+      </LocalizationProvider>
     );
   }
 }
