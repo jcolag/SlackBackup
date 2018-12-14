@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Reflux from 'reflux';
+import { Localized } from 'fluent-react/compat';
 import { ConfigActions, ConfigStore } from '../store/configstore';
 import { SlackActions, SlackStore } from '../store/slackstore';
 
