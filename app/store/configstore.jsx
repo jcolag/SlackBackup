@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const appFolder = app.getPath('userData');
+const appLanguage = app.getLocale();
 const configFile = '.slackbackuprc.json';
 const indentation = 4;
 
@@ -40,6 +41,7 @@ export class ConfigStore extends Reflux.Store {
     super();
     const filename = path.join(appFolder, configFile);
     const oldConfigFile = path.join(process.mainModule.filename, configFile);
+    console.log(appLanguage);
     let oldFile = false;
     if (fs.existsSync(filename)) {
       config = JSON.parse(fs.readFileSync(filename, 'utf-8'));
@@ -54,6 +56,7 @@ export class ConfigStore extends Reflux.Store {
       comparativeSentiment: Object.prototype.hasOwnProperty.call(config, 'comparativeSentiment')
         ? config.comparativeSentiment
         : false,
+      defaultLanguage: appLanguage,
       emptySave: Object.prototype.hasOwnProperty.call(config, 'emptySave')
         ? config.emptySave
         : false,
@@ -63,6 +66,9 @@ export class ConfigStore extends Reflux.Store {
       folder,
       folderMissing: !fs.existsSync(folder),
       isDirty: oldFile,
+      language: Object.prototype.hasOwnProperty.call(config, 'language')
+        ? config.language
+        : appLanguage,
       useUserColor: Object.prototype.hasOwnProperty.call(config, 'useUserColor')
         ? config.useUserColor
         : false,
