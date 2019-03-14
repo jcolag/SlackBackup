@@ -116,7 +116,13 @@ export default class ThreadList extends Reflux.Component<Props> {
   render() {
     const filenames = {};
     this.state.searchFiles.forEach(file => {
-      const { team } = file.teamInfo;
+      const f = file;
+      if (f.teamInfo === null || f.teamInfo === undefined) {
+        f.teamInfo = {
+          team: f.team,
+        };
+      }
+      const { team } = f.teamInfo;
       if (!Object.prototype.hasOwnProperty.call(filenames, team)) {
         filenames[team] = {};
       }
