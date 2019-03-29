@@ -127,8 +127,6 @@ export default class Relationship extends Reflux.Component<Props> {
     }
     this.forceSim = d3.forceSimulation(nodes)
       .force('charge', d3.forceManyBody().strength((n) => -n.r * 5))
-      .force('collision', d3.forceCollide()
-        .strength((n) => 1 / n.r))
       .force('link', d3.forceLink(links)
         .distance((l) => (maxDist / l.score) + 30)
         .strength((l) => l.score / maxScore))
