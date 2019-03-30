@@ -162,7 +162,7 @@ export default class Relationship extends Reflux.Component<Props> {
               x2={link.target.x}
               y2={link.target.y}
               key={`line-${link.source.x}-${link.source.y}-${link.target.x}-${link.target.y}`}
-              stroke="black"
+              stroke="lightgray"
             />
           ))}
         {this.state.nodes.map((node) => (
