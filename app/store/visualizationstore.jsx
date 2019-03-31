@@ -377,7 +377,10 @@ export class VisualizationStore extends Reflux.Store {
           const fqname = path.join(folder, d, file);
           if (file.startsWith('user-')) {
             // Already processed above.
-          } else if (file !== '_localuser.json' && file !== 'im-slackbot.json') {
+          } else if (
+            file.toLowerCase() !== '_localuser.json' &&
+            file.toLowerCase() !== 'im-slackbot.json'
+          ) {
             // Already processed the user above and Slackbot/notes aren't good data
             const messages = JSON.parse(fs.readFileSync(fqname, 'utf-8'));
             const users = messages
