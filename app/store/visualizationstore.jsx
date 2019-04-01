@@ -74,6 +74,7 @@ export class VisualizationStore extends Reflux.Store {
           const sent = sentiment(msg.text);
           sent.color = msg.user_info.color;
           sent.filename = msg.filename;
+          sent.team = msg.local_user.team;
           sent.text = msg.text;
           sent.time = moment(msg.ts * 1000).format('dddd, ll, LT');
           sent.to_user = msg.other_user ? msg.other_user : msg.user_info;
@@ -287,6 +288,7 @@ export class VisualizationStore extends Reflux.Store {
           readabilities.push({
             color: msg.user_info.color,
             file: conversation[0].filename,
+            team: msg.local_user.team,
             text: msg.text,
             time: moment(msg.ts * 1000).format('dddd, ll, LT'),
             to_user: msg.other_user ? msg.other_user : msg.user_info,
@@ -329,6 +331,7 @@ export class VisualizationStore extends Reflux.Store {
             color: msg.user_info.color,
             day,
             file: msg.filename,
+            team: msg.local_user.team,
             text: msg.text,
             time: (ts + (ctz * 60)) - day,
             to_user: msg.other_user ? msg.other_user : msg.user_info,
