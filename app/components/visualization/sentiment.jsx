@@ -104,7 +104,7 @@ export default class Sentiment extends Reflux.Component<Props> {
       .call(yAxis);
     this.state.sentiments.sort((a, b) => b.words - a.words).forEach(sentiment => {
       const {
-        text, time, ts, words
+        team, text, time, ts, words
       } = sentiment;
       const score = sentiment.value(normalize);
       const user = sentiment.to_user;
@@ -129,7 +129,7 @@ export default class Sentiment extends Reflux.Component<Props> {
         })
         .style('fill', () => `#${color}`)
         .append('title')
-        .text(() => `${time}\nfor ${user.real_name}\nScore: ${score}\n${text}`);
+        .text(() => `${time}\nfor ${user.real_name} (${team})\nScore: ${score}\n${text}`);
     });
   }
 
