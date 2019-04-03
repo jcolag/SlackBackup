@@ -108,7 +108,7 @@ export default class Readability extends Reflux.Component<Props> {
       .sort((a, b) => b.text.length - a.text.length)
       .forEach(readability => {
         const {
-          text, time, ts
+          team, text, time, ts
         } = readability;
         const score = readability.value;
         const user = readability.to_user;
@@ -133,7 +133,7 @@ export default class Readability extends Reflux.Component<Props> {
           })
           .style('fill', () => `#${color}`)
           .append('title')
-          .text(() => `${time}\nfor ${user.real_name}\nScore: ${score}\n${Readability.explainScore(score)}\n\n${text}`);
+          .text(() => `${time}\nfor ${user.real_name} (${team})\nScore: ${score}\n${Readability.explainScore(score)}\n\n${text}`);
       });
   }
 
