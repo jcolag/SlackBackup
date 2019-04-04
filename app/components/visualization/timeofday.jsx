@@ -132,7 +132,7 @@ export default class TimeOfDay extends Reflux.Component<Props> {
           ThreadActions.toggleSelection(datats, true);
         })
         .append('title')
-        .text(() => `${moment(ts * 1000).format('dddd, MMMM Do YYYY, h:mm:ss a')}\nfor ${user.real_name}\n${text}`);
+        .text(() => `${moment(ts * 1000).format('dddd, MMMM Do YYYY, h:mm:ss a')}\nfor ${user.real_name} (${tod.team})\n${text}`);
     });
   }
 
