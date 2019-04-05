@@ -45,7 +45,7 @@ export class SlackStore extends Reflux.Store {
       listsLoading: false,
       listsFailed: false,
       team: {},
-      unreadMessages: 0,
+      unreadMessages: null,
       user: {},
       userMap: {},
       users: [],
@@ -100,6 +100,7 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       listsFailed: true,
       listsLoading: false,
+      unreadMessages: null,
     });
   }
 
@@ -126,6 +127,7 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       itemsProcessed: 0,
       itemsToProcess: 0,
+      unreadMessages: 0,
     });
     this.processUsers();
     this.processChannels();
@@ -143,6 +145,7 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       listsFailed: null,
       listsLoading: null,
+      unreadMessages: null,
     });
   }
 
