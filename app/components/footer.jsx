@@ -30,11 +30,27 @@ export default class Footer extends Reflux.Component {
   render() {
     const teamName = this.state.team ? this.state.team.name : 'this team';
     const unread = this.state.unreadMessages;
-    const status = unread > 0 ? `You have ${unread} unread messages in ${teamName}` : <span>&nbsp;</span>;
     const percentDone = this.state.itemsProcessed > 0
       ? `${(this.state.itemsProcessed / this.state.itemsToProcess) * 100}%`
       : '0%';
     let progress = <span />;
+    let status = '';
+
+    switch (unread) {
+      case null:
+        status = ' ';
+        break;
+      case 0:
+        status = `You are up to date in ${teamName}`;
+        break;
+      case -1:
+        status = `There was a problem downloading messages for ${teamName}`;
+        break;
+      default:
+        status = `You have ${unread} unread messages in ${teamName}`;
+        break;
+    }
+
     if (this.state.itemsToProcess > this.state.itemsProcessed) {
       progress = (
         <span className="progress" style={{ borderRadius: '0.25em', width: '40vw' }}>
