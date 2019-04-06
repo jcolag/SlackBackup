@@ -84,6 +84,8 @@ export default class Home extends Reflux.Component<Props> {
     const gutterClass = `col-md-${this.state.gutterWidth}`;
     const contentClass = `col-md-${12 - (this.state.gutterWidth * 2)}`;
     let currentPage = <div />;
+
+    SlackActions.resetDownloadState();
     switch (this.state.screenToDisplay) {
       case 0:
         currentPage = <Configuration key="config" />;

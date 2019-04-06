@@ -74,6 +74,7 @@ export default class ListSelect extends Reflux.Component<Props> {
    * @memberof ListSelect
    */
   static startDownload() {
+    SlackActions.resetDownloadState();
     SlackActions.getAll();
     VisualizationActions.loadConversations();
   }
