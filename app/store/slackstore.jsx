@@ -100,7 +100,7 @@ export class SlackStore extends Reflux.Store {
     this.setState({
       listsFailed: true,
       listsLoading: false,
-      unreadMessages: null,
+      unreadMessages: -1,
     });
   }
 
