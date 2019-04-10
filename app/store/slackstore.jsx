@@ -712,7 +712,7 @@ export class SlackStore extends Reflux.Store {
       const json = JSON.stringify(messages, null, indentation);
       fs.writeFileSync(filename, json);
       if (data.unread_count_display) {
-        const unread = this.state.unreadMessages == null ? this.state.unreadMessages;
+        const unread = this.state.unreadMessages == null ? this.state.unreadMessages : 0;
         this.setState({ unreadMessages: unread + data.unread_count_display });
       }
     }
