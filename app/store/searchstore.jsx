@@ -70,7 +70,7 @@ export class SearchStore extends Reflux.Store {
       const pathParts = filename.split(path.sep);
       const file = pathParts[pathParts.length - 1];
       const team = pathParts[pathParts.length - 2];
-      const teamInfo = this.teams.filter(t => t.folder === team)[0];
+      const teamInfo = this.teams.filter(t => t.folder.replace(/-/g, '_') === team)[0];
       const baseName = file.split('.')[0];
       const frags = baseName.split('-');
       const fileType = frags.shift();
