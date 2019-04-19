@@ -28,6 +28,7 @@ export class UiStore extends Reflux.Store {
       aboutVisible: false,
       exportVisible: false,
       gutterWidth: 2,
+      previousScreen: 0,
       screenToDisplay: 0,
       threadVisible: false,
       transientStatus: '',
@@ -59,6 +60,7 @@ export class UiStore extends Reflux.Store {
   onSetScreen(number: number) {
     this.setState({
       gutterWidth: 2,
+      previousScreen: this.state.screenToDisplay,
       screenToDisplay: number,
       threadVisible: false,
     });
