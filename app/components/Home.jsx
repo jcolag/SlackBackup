@@ -85,7 +85,10 @@ export default class Home extends Reflux.Component<Props> {
     const contentClass = `col-md-${12 - (this.state.gutterWidth * 2)}`;
     let currentPage = <div />;
 
-    SlackActions.resetDownloadState();
+    if (this.state.screenToDisplay !== this.state.previousScreen) {
+      SlackActions.resetDownloadState();
+    }
+
     switch (this.state.screenToDisplay) {
       case 0:
         currentPage = <Configuration key="config" />;
@@ -109,6 +112,7 @@ export default class Home extends Reflux.Component<Props> {
         currentPage = <div key="empty" />;
         break;
     }
+
     return (
       <LocalizationProvider bundles={generateBundles(navigator.languages, this.state.language)}>
         <div style={{ height: '100vh' }}>
