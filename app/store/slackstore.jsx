@@ -381,7 +381,10 @@ export class SlackStore extends Reflux.Store {
         unreads: true,
       })
         .then(this.writeHistory.bind(this, im, res[0], imFile))
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error)
+          this.setState({ itemsProcessed: -1 });
+        });
       this.setState({ itemsProcessed: this.state.itemsProcessed + 1 });
     });
   }
