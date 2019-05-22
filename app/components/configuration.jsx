@@ -224,7 +224,7 @@ export default class Configuration extends Reflux.Component<Props> {
   render() {
     const tokenOptions = [<option key="null-token" value={-1} />];
     let count = 0;
-    this.state.tokens.sort((a, b) => a.name > b.name).forEach(token => {
+    this.state.tokens.forEach(token => {
       let text = '';
       if (typeof token === 'string') {
         text = token;
