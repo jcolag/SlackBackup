@@ -52,6 +52,16 @@ export class ConfigStore extends Reflux.Store {
     const folder = Object.prototype.hasOwnProperty.call(config, 'folder')
       ? config.folder
       : path.join(app.getPath('documents'), 'SlackBackup');
+    let tokens = Object.prototype.hasOwnProperty.call(config, 'tokens')
+      ? config.tokens
+      : [];
+    tokens = tokens.sort((a, b) => {
+      if (a.name.toLowerCase() > b.name.toLowerCase()) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
     this.state = {
       comparativeSentiment: Object.prototype.hasOwnProperty.call(config, 'comparativeSentiment')
         ? config.comparativeSentiment
@@ -75,9 +85,7 @@ export class ConfigStore extends Reflux.Store {
       nonmemberSave: Object.prototype.hasOwnProperty.call(config, 'nonmemberSave')
         ? config.nonmemberSave
         : false,
-      tokens: Object.prototype.hasOwnProperty.call(config, 'tokens')
-        ? config.tokens
-        : [],
+      tokens,
       whichToken: -1,
     };
     this.listenables = ConfigActions;
