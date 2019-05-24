@@ -56,7 +56,10 @@ export class ConfigStore extends Reflux.Store {
       ? config.tokens
       : [];
     tokens = tokens.sort((a, b) => {
-      if (a.name.toLowerCase() > b.name.toLowerCase()) {
+      if (
+        a.name.toLowerCase().replace(/[^a-z]/g, ' ') >
+        b.name.toLowerCase().replace(/[^a-z]/g, ' ')
+      ) {
         return 1;
       } else {
         return -1;
