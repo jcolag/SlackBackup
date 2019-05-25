@@ -89,6 +89,7 @@ export class ConfigStore extends Reflux.Store {
         ? config.nonmemberSave
         : false,
       tokens,
+      weightIndirect: 0,
       whichToken: -1,
     };
     this.listenables = ConfigActions;
