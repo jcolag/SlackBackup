@@ -147,7 +147,7 @@ export class VisualizationStore extends Reflux.Store {
         return;
       }
       Object.getOwnPropertyNames(who).forEach(user => {
-        const weight = isDirect ? 1 : 0.25;
+        const weight = isDirect ? 1 : ConfigStore.state.weightIndirect;
         if (user === local) {
           Object.getOwnPropertyNames(who).forEach(w => {
             relationshipsOut[users.indexOf(w)] += who[user] * weight;
