@@ -160,16 +160,18 @@ export class VisualizationStore extends Reflux.Store {
       relationshipsOut[users.indexOf(local)] = 0;
     });
     for (let i = 0; i < users.length; i += 1) {
-      relationships.push({
-        color: userColors[i],
-        deleted: userNames[i].deleted,
-        file: userNames[i].file,
-        in: relationshipsIn[i],
-        name: userNames[i].name,
-        out: relationshipsOut[i],
-        team: userNames[i].team,
-        teamColor: VisualizationStore.colorFromString(userNames[i].team),
-      });
+      if (relationshipsIn[i] !== 0 && relationshipsOut[i] !== 0) {
+        relationships.push({
+          color: userColors[i],
+          deleted: userNames[i].deleted,
+          file: userNames[i].file,
+          in: relationshipsIn[i],
+          name: userNames[i].name,
+          out: relationshipsOut[i],
+          team: userNames[i].team,
+          teamColor: VisualizationStore.colorFromString(userNames[i].team),
+        });
+      }
     }
     this.setState({ relationships });
     VisualizationActions.determineRelationships.completed();
