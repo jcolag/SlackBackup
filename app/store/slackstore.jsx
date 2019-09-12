@@ -371,8 +371,11 @@ export class SlackStore extends Reflux.Store {
     this.state.ims.filter(im => im.shouldDownload).forEach((im) => {
       const user = this.state.userMap[im.user];
       const name = user.real_name ? user.real_name : user.name;
-      const imFile = path.join(ConfigStore.state.folder, this.teamName, `im-${name}.json`)
-        .replace(' ', '-');
+      const imFile = path.join(
+        ConfigStore.state.folder,
+        this.teamName,
+        `im-${name.replace(/ /g, '-')}.json`
+        );
       const res = SlackStore.retrieveExistingMessages(imFile);
       this.slack.im.history({
         channel: im.id,
