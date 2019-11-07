@@ -31,6 +31,7 @@ export default class Configuration extends Reflux.Component<Props> {
     this.state = {
       addingToken: false,
       newTokenLength: 0,
+      tokenNotRemovable: true,
     };
   }
 
@@ -120,11 +121,14 @@ export default class Configuration extends Reflux.Component<Props> {
    * @returns {void} Nothing
    * @memberof Configuration
    */
-  static updateToken(event: SyntheticInputEvent<HTMLSelectElement>) {
+  updateToken(event: SyntheticInputEvent<HTMLSelectElement>) {
     const { currentTarget } = event;
     const index = currentTarget.selectedIndex;
     const option = currentTarget.children[index];
     ConfigActions.setTokenIndex(Number(option.value));
+    this.setState({
+      tokenNotRemovable: index === 0,
+    });
   }
 
   /**
@@ -159,6 +163,26 @@ export default class Configuration extends Reflux.Component<Props> {
       addingToken: false,
       newTokenLength: 0,
     });
+  }
+
+  /**
+   * Remove the current token.
+   */
+  removeToken() {
+    const {
+      tokens,
+      whichToken,
+    } = this.state;
+    const token = tokens[whichToken];
+    let id;
+
+    if (typeof token === 'string') {
+      id = token;
+    } else {
+      id = token.value;
+    }
+
+    ConfigActions.removeToken(id);
   }
 
   /**
@@ -236,21 +260,38 @@ export default class Configuration extends Reflux.Component<Props> {
     });
     return (
       <div style={{ height: '100vh', textAlign: 'left' }} >
-        <h1><i className="fa fa-slack" /> Configuration</h1>
+        <h1>
+          <i className="fa fa-slack" />
+          &nbsp;
+          <span>Configuration</span>
+        </h1>
         <div className="row col-md-12">
           <div className="col-md-3">
             <label htmlFor="tokens" className="form-control">Token</label>
           </div>
-          <div className="col-md-7">
+          <div className="col-md-5">
             <select
               className="custom-select"
               id="tokens"
               style={{ width: '100%' }}
-              onChange={Configuration.updateToken}
+              onChange={this.updateToken.bind(this)}
               value={this.state.whichToken}
             >
               {tokenOptions}
             </select>
+          </div>
+          <div className="col-md-2">
+            <button
+              className="btn btn-danger"
+              disabled={this.state.tokenNotRemovable}
+              onClick={this.removeToken.bind(this)}
+              style={{ width: '100%' }}
+              title="Remove the current Slack legacy token"
+            >
+              <i className="fa fa-minus-square" />
+              &nbsp;
+              <span>Delete</span>
+            </button>
           </div>
           <div className="col-md-2">
             <button
@@ -261,7 +302,8 @@ export default class Configuration extends Reflux.Component<Props> {
               title="Add a new Slack legacy token"
             >
               <i className="fa fa-plus-square" />
-              &nbsp;Add
+              &nbsp;
+              <span>Add</span>
             </button>
           </div>
         </div>
@@ -286,7 +328,7 @@ export default class Configuration extends Reflux.Component<Props> {
                 at Slack&rsquo;s legacy token generator
               </a>. You may need to log in as multiple users to see all teams.
             </div>
-            <div className="col-md-1" />
+            <div className="col-md-1" />addToken
           </div>
           <div className="col-md-12 row" style={{ marginBottom: '1em' }}>
             <div className="col-md-1" />

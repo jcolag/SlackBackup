@@ -13,6 +13,7 @@ const indentation = 4;
 export const ConfigActions = Reflux.createActions({
   addNewToken: {},
   createFolder: {},
+  removeToken: {},
   saveConfiguration: {},
   setComparativeSentiment: {},
   setEmptySave: {},
@@ -149,6 +150,21 @@ export class ConfigStore extends Reflux.Store {
     this.setState({
       isDirty: true,
       tokens,
+    });
+  }
+
+  /**
+   * Removes the current token from the list.
+   * 
+   * @param {string} tokenId 
+   */
+  onRemoveToken(tokenId: string) {
+    const { tokens } = this.state;
+    const newTokens = tokens.filter(t => t !== tokenId && t.value !== tokenId);
+
+    this.setState({
+      isDirty: true,
+      tokens: newTokens,
     });
   }
 
