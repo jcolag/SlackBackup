@@ -104,6 +104,7 @@ export class VisualizationStore extends Reflux.Store {
    * @memberof VisualizationStore
    */
   onDetermineRelationships() {
+    const now = Date.now() / 1000.0;
     const users = Object.getOwnPropertyNames(this.userMap);
     const relationshipsIn = [];
     const relationshipsOut = [];
@@ -141,13 +142,14 @@ export class VisualizationStore extends Reflux.Store {
         if (!who[msg.user]) {
           who[msg.user] = 0;
         }
-        who[msg.user] += 1;
+        who[msg.user] += (1 / Math.log10(now - msg.ts));
       });
       if (!who[local] || who[local] === 0) {
         return;
       }
       Object.getOwnPropertyNames(who).forEach(user => {
         const weight = isDirect ? 1 : ConfigStore.state.weightIndirect;
+        who[user] += 10;
         if (user === local) {
           Object.getOwnPropertyNames(who).forEach(w => {
             relationshipsOut[users.indexOf(w)] += who[user] * weight;
